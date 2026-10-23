@@ -38,6 +38,7 @@
 - [x] `sql.js` engine wrapper (init, exec, timing, error surface, schema introspection)
 - [x] Three themed datasets: E-Commerce Empire, Social Network, Guild RPG (+ generated rows)
 - [x] SQL editor with syntax highlighting, line numbers, mobile quick-keyword bar
+- [x] Table chips reveal the live column schema on hover (tap on touch): type, PK / FK / UQ / NN / AI markers, click a column to copy its name
 - [x] Result grid (sticky header, null rendering, row count, exec time, error panel)
 - [x] Visual query explainer: JOIN (Venn/merge) + GROUP BY collapse animation
 - [x] Worlds 1–5 curriculum: SELECT/filter, sort/paginate, aggregates, joins, advanced (subquery/CTE/CASE/window) — 27 quests
@@ -72,6 +73,13 @@
 - [ ] Drag-to-reorder columns in the ERD inspector — column order follows insertion order
 - [ ] Bug Hunter: nil-map-panic and N+1 challenge variants
 - [ ] Live binding of the Dojo payload to the last SQL result set
+
+## Fixes (found after the first release)
+- [x] Junction tables emitted one inline `PRIMARY KEY` per member column, so any schema with
+      an N:M relation failed to execute — `table "orders_products" has more than one primary key`.
+      Composite keys are now emitted once as a table constraint, with explicit `NOT NULL` on members.
+- [x] Seeder drew junction sides independently, so duplicate pairs collided with that key.
+      It now enumerates the real combinations and samples distinct pairs.
 
 ## Deferred (explicitly skipped)
 - [ ] E2E / Playwright suite — skipped for fast development

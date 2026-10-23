@@ -191,7 +191,12 @@ function defaultSql(col: PhysicalColumn, dialect: Dialect): string | null {
   return value;
 }
 
-function columnDefinition(col: PhysicalColumn, dialect: Dialect, inlineRef = false): string {
+function columnDefinition(
+  col: PhysicalColumn,
+  dialect: Dialect,
+  inlineRef = false,
+  inCompositePk = false,
+): string {
   const q = (n: string) => quoteIdent(n, dialect);
   const parts: string[] = [q(col.name)];
 
@@ -203,10 +208,14 @@ function columnDefinition(col: PhysicalColumn, dialect: Dialect, inlineRef = fal
     parts.push(sqlType(col, dialect));
   }
 
-  if (col.primaryKey && (dialect === 'sqlite' || col.autoIncrement)) parts.push('PRIMARY KEY');
+  // A composite PK is emitted once as a table constraint — emitting PRIMARY KEY on
+  // each member column as well is a syntax error in SQLite ("more than one primary key").
+  if (col.primaryKey && !inCompositePk && (dialect === 'sqlite' || col.autoIncrement)) parts.push('PRIMARY KEY');
   if (dialect === 'mysql' && col.autoIncrement) parts.push('AUTO_INCREMENT');
   if (dialect === 'sqlite' && col.autoIncrement) parts.push('AUTOINCREMENT');
-  if (col.notNull && !(col.primaryKey && dialect === 'sqlite')) parts.push('NOT NULL');
+  // SQLite does not imply NOT NULL from a PRIMARY KEY, and never does for a
+  // composite one, so the member columns must carry it explicitly.
+  if (col.notNull && !(col.primaryKey && dialect === 'sqlite' && !inCompositePk)) parts.push('NOT NULL');
   if (col.unique && !col.primaryKey) parts.push('UNIQUE');
 
   const def = defaultSql(col, dialect);
@@ -237,8 +246,9 @@ export function generateSql(schema: ErdSchema): string {
 
   for (const table of tables) {
     const lines: string[] = [];
+    const composite = new Set(table.compositePrimaryKey ?? []);
     for (const col of table.columns) {
-      lines.push(`  ${columnDefinition(col, dialect, dialect === 'sqlite')}`);
+      lines.push(`  ${columnDefinition(col, dialect, dialect === 'sqlite', composite.has(col.name))}`);
     }
     if (table.compositePrimaryKey?.length) {
       lines.push(`  PRIMARY KEY (${table.compositePrimaryKey.map(q).join(', ')})`);

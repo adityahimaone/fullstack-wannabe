@@ -149,18 +149,96 @@ export function listTables(db: Database): TableInfo[] {
   }
 }
 
-export function describeTable(db: Database, table: string) {
+export interface TableColumn {
+  name: string;
+  type: string;
+  notNull: boolean;
+  pk: boolean;
+  autoIncrement: boolean;
+  unique: boolean;
+  dflt: string | null;
+  fk: { table: string; column: string } | null;
+}
+
+export interface TableSchema extends TableInfo {
+  columns: TableColumn[];
+}
+
+function tableDdl(db: Database, table: string): string {
+  try {
+    const res = db.exec(`SELECT sql FROM sqlite_master WHERE type='table' AND name='${table.replace(/'/g, "''")}'`);
+    return String(res[0]?.values?.[0]?.[0] ?? '');
+  } catch {
+    return '';
+  }
+}
+
+/** Single-column UNIQUE constraints (multi-column ones are table-level, not a column attribute). */
+function uniqueColumns(db: Database, table: string): Set<string> {
+  const out = new Set<string>();
+  try {
+    const list = db.exec(`PRAGMA index_list("${table}")`);
+    for (const row of list[0]?.values ?? []) {
+      const indexName = String(row[1]);
+      const isUnique = Number(row[2]) === 1;
+      const origin = String(row[3] ?? '');
+      if (!isUnique || origin === 'pk') continue;
+      const info = db.exec(`PRAGMA index_info("${indexName}")`);
+      const cols = (info[0]?.values ?? []).map((r) => String(r[2]));
+      if (cols.length === 1) out.add(cols[0]);
+    }
+  } catch {
+    /* older SQLite builds may not expose index_list */
+  }
+  return out;
+}
+
+function foreignKeys(db: Database, table: string): Map<string, { table: string; column: string }> {
+  const out = new Map<string, { table: string; column: string }>();
+  try {
+    const res = db.exec(`PRAGMA foreign_key_list("${table}")`);
+    for (const row of res[0]?.values ?? []) {
+      const from = String(row[3] ?? '');
+      const target = String(row[2] ?? '');
+      if (from && target) out.set(from, { table: target, column: String(row[4] ?? 'id') });
+    }
+  } catch {
+    /* no FK pragma support */
+  }
+  return out;
+}
+
+export function describeTable(db: Database, table: string): TableColumn[] {
   try {
     const res = db.exec(`PRAGMA table_info("${table}")`);
-    return (res[0]?.values ?? []).map((row) => ({
-      name: String(row[1]),
-      type: String(row[2] ?? ''),
-      notNull: Number(row[3]) === 1,
-      pk: Number(row[5]) === 1,
-    }));
+    const uniques = uniqueColumns(db, table);
+    const fks = foreignKeys(db, table);
+    const autoIncrement = /AUTOINCREMENT/i.test(tableDdl(db, table));
+
+    return (res[0]?.values ?? []).map((row) => {
+      const name = String(row[1]);
+      const type = String(row[2] ?? '');
+      const pk = Number(row[5]) > 0;
+      const dflt = row[4];
+      return {
+        name,
+        type: type || 'any',
+        notNull: Number(row[3]) === 1,
+        pk,
+        autoIncrement: pk && autoIncrement && /int/i.test(type),
+        unique: uniques.has(name),
+        dflt: dflt === null || dflt === undefined ? null : String(dflt),
+        fk: fks.get(name) ?? null,
+      };
+    });
   } catch {
     return [];
   }
+}
+
+/** Every table plus its column list — computed once per database load, not per hover. */
+export function describeSchema(db: Database): TableSchema[] {
+  return listTables(db).map((t) => ({ ...t, columns: describeTable(db, t.name) }));
 }
 
 /* ------------------------------------------------------------------ */

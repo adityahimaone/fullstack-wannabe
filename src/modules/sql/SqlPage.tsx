@@ -21,14 +21,15 @@ import { QUESTS, WORLDS, isWorldUnlocked, type Quest } from './quests';
 import {
   compareResults,
   datasetDatabase,
+  describeSchema,
   erdDataset,
   execSql,
   getDatabase,
   invalidate,
-  listTables,
   type QueryResult,
-  type TableInfo,
+  type TableSchema,
 } from './engine';
+import { TableChip } from './TableChip';
 import { DATASETS, getDataset } from './datasets';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -54,7 +55,7 @@ export function SqlPage() {
 
   const [db, setDb] = React.useState<Database | null>(null);
   const [dbKey, setDbKey] = React.useState<string>('');
-  const [tables, setTables] = React.useState<TableInfo[]>([]);
+  const [tables, setTables] = React.useState<TableSchema[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [result, setResult] = React.useState<QueryResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
@@ -101,14 +102,14 @@ export function SqlPage() {
           if (cancelled) return;
           setDb(database);
           setDbKey(erd.key);
-          setTables(listTables(database));
+          setTables(describeSchema(database));
         } else {
           const ds = getDataset(datasetKey) ?? DATASETS[0];
           const database = await datasetDatabase(ds);
           if (cancelled) return;
           setDb(database);
           setDbKey(`dataset:${ds.id}`);
-          setTables(listTables(database));
+          setTables(describeSchema(database));
         }
         if (!cancelled) setLoading(false);
       } catch (err) {
@@ -298,19 +299,20 @@ export function SqlPage() {
           minHeight={isDesktop ? 168 : 200}
           ariaLabel="SQL editor"
         />
-        <div className="mt-1.5 flex gap-1 overflow-x-auto pb-0.5 no-scrollbar">
-          {tables.map((t) => (
-            <button
-              key={t.name}
-              type="button"
-              onClick={() => setSql(`SELECT *\nFROM ${t.name}\nLIMIT 20;`)}
-              className="inline-flex shrink-0 items-center gap-1 rounded-sm border border-border px-1.5 py-0.5 font-mono text-[0.5625rem] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              <Table2 className="h-2.5 w-2.5" />
-              {t.name}
-              <span className="text-muted-foreground/40">{t.rows}</span>
-            </button>
-          ))}
+        <div className="mt-1.5 flex items-center gap-1.5">
+          <span className="hidden shrink-0 items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest text-muted-foreground/40 sm:inline-flex">
+            <Table2 className="h-2.5 w-2.5" />
+            tables
+          </span>
+          <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto pb-0.5 no-scrollbar">
+            {tables.map((t) => (
+              <TableChip
+                key={t.name}
+                table={t}
+                onPick={() => setSql(`SELECT *\nFROM ${t.name}\nLIMIT 20;`)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

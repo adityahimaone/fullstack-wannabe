@@ -139,6 +139,28 @@ export function seedSchema(schema: ErdSchema): SeedResult {
     const keys: (string | number)[] = [];
     const rows: string[] = [];
 
+    // A junction row *is* the composite key, so drawing each side from its pool
+    // independently would produce duplicate pairs and trip the PK constraint.
+    // Enumerate the real combinations and take a distinct sample instead.
+    if (table.kind === 'junction' && table.columns.every((c) => c.references)) {
+      const pools = table.columns.map((c) => pkValues.get(c.references!.table) ?? []);
+      if (pools.every((p) => p.length > 0)) {
+        let combos: (string | number)[][] = [[]];
+        for (const pool of pools) {
+          const next: (string | number)[][] = [];
+          for (const prefix of combos) for (const value of pool) next.push([...prefix, value]);
+          combos = next;
+        }
+        const picked = faker.helpers.shuffle(combos).slice(0, Math.min(count, combos.length));
+        rowCounts[table.name] = picked.length;
+        insert(
+          table,
+          picked.map((combo) => `(${combo.map((v) => literal(v, dialect)).join(', ')})`),
+        );
+        continue;
+      }
+    }
+
     for (let i = 0; i < count; i++) {
       const values: string[] = [];
       let seq = i + 1;
