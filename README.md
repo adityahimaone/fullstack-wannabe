@@ -11,10 +11,28 @@ No backend, no build-time API keys, no network calls at runtime. SQLite runs thr
 WebAssembly, JavaScript and TypeScript execute in a killable Web Worker, and progress
 lives in `localStorage`.
 
+![Overview](docs/screenshots/overview.png)
+
+**Requirements:** Node 18 or newer.
+
 ```bash
 npm install
 npm run dev        # http://localhost:5173
 ```
+
+---
+
+## Contents
+
+- [What's inside](#whats-inside)
+  - [01 · Schema Studio](#01--schema-studio)
+  - [02 · Query Arena](#02--query-arena)
+  - [03 · Polyglot Dojo](#03--polyglot-dojo)
+  - [04 · API Blueprint](#04--api-blueprint)
+- [Progression](#progression)
+- [Development](#development)
+- [Deliberately out of scope](#deliberately-out-of-scope)
+- [Tech](#tech)
 
 ---
 
@@ -42,6 +60,8 @@ sample distinct pairs, which matters because duplicate pairs collide on a compos
 
 On mobile the canvas is full-screen with pinch/pan, and the inspector and DDL move into
 bottom drawers.
+
+![Schema Studio](docs/screenshots/schema-studio.png)
 
 ### 02 · Query Arena
 
@@ -77,6 +97,8 @@ auto-increment markers.
 dataset picker — the arena then queries the tables you drew instead of the fixtures, which is
 what makes the studio-to-arena hop real rather than decorative.
 
+![Query Arena](docs/screenshots/query-arena.png)
+
 ### 03 · Polyglot Dojo
 
 The same payload transformation, written four ways. Each challenge grades your code by
@@ -103,6 +125,8 @@ constructs plus a reference output you can compare by eye.
 The inspector panel shows the input payload, your returned value as a live data structure,
 and a short "why it works" explanation.
 
+![Polyglot Dojo](docs/screenshots/polyglot-dojo.png)
+
 ### 04 · API Blueprint
 
 Six layers, each mapped to a real folder tree generated from your ERD:
@@ -116,6 +140,8 @@ with realistic latency and status codes.
 
 The six layers are server-shaped, so this module generates **Go, Node.js and PHP**. The
 Frontend TS track is Dojo-only; selecting it here resolves to Node.js and says so.
+
+![API Blueprint](docs/screenshots/api-blueprint.png)
 
 ---
 
@@ -135,6 +161,8 @@ XP from quests, challenges and blueprint steps drives ten levels, from *Curious 
 | Fullstack Architect | All 6 pipeline steps for all three backend stacks |
 
 Progress, active stack, drafts and theme persist to `localStorage` under the `fsw:` prefix.
+Dark by default, with a light-theme toggle in the sidebar and a `Reset` that clears
+everything.
 
 ---
 
@@ -146,6 +174,7 @@ npm run build        # tsc --noEmit && vite build
 npm run typecheck    # types only
 npm run preview      # serve the production build
 npm run check:dojo   # challenge-bank integrity check
+npm run smoke        # 15-check CDP smoke suite against a real build
 ```
 
 ### `npm run check:dojo`
@@ -161,6 +190,30 @@ so the reference has to actually run. This check:
 
 Reimplementing the grading logic in the check once hid a real bug, which is why the check
 imports the actual function.
+
+### `npm run smoke`
+
+Needs a production build and a preview server running:
+
+```bash
+npm run build
+npx vite preview --port 4173 --host 127.0.0.1   # --host matters; localhost can resolve to ::1
+npm run smoke
+```
+
+Drives headless Chrome over the DevTools Protocol — no test framework, no mocking. It
+exercises the real paths: SQL executes in `sql.js`, the TypeScript challenge runs in the
+app's own worker, and every reference solution is pasted in and graded. Override the browser
+with `SMOKE_CHROME` or the target with `SMOKE_BASE`.
+
+The 15 checks cover each module, then a responsive audit across 20 route × breakpoint
+combinations and a console-error tripwire. Two details worth knowing if you extend it:
+`innerText` applies `text-transform`, so assertions lowercase before matching; and setting a
+React-controlled textarea needs the native value setter plus an `input` event.
+
+Chrome needs `--no-sandbox --in-process-gpu --disable-dev-shm-usage` in containerised
+environments or its network service crashes and the WebSocket opens without ever delivering a
+frame.
 
 ### Layout
 
@@ -206,8 +259,8 @@ route × breakpoint combinations (375 / 768 / 1024 / 1440).
 
 ## Deliberately out of scope
 
-- **No E2E / Playwright suite** — functional smoke tests over CDP instead, for speed of
-  iteration.
+- **No E2E / Playwright suite** — the CDP smoke suite above plus offline challenge checks
+  cover the same ground without the dependency weight.
 - **No real Go/PHP runtime** — a browser-only app, so those stacks are statically analysed
   against required constructs.
 - **No backend server or real database** — everything runs client-side by design.

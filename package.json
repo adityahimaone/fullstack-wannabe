@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "check:dojo": "node scripts/check-dojo.mjs",
+    "smoke": "node scripts/smoke.mjs",
     "postinstall": "node scripts/copy-wasm.mjs"
   },
   "dependencies": {
