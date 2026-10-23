@@ -39,6 +39,7 @@
 - [x] Three themed datasets: E-Commerce Empire, Social Network, Guild RPG (+ generated rows)
 - [x] SQL editor with syntax highlighting, line numbers, mobile quick-keyword bar
 - [x] Table chips reveal the live column schema on hover (tap on touch): type, PK / FK / UQ / NN / AI markers, click a column to copy its name
+- [x] Autocomplete in the editor — keywords, functions, tables and columns; `↑`/`↓` to move, `Tab`/`Enter` to insert, `Esc` to dismiss; typing `orders.` narrows to that table's columns; suppressed inside comments and strings
 - [x] Result grid (sticky header, null rendering, row count, exec time, error panel)
 - [x] Visual query explainer: JOIN (Venn/merge) + GROUP BY collapse animation
 - [x] Worlds 1–5 curriculum: SELECT/filter, sort/paginate, aggregates, joins, advanced (subquery/CTE/CASE/window) — 27 quests

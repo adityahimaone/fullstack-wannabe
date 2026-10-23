@@ -30,6 +30,7 @@ import {
   type TableSchema,
 } from './engine';
 import { TableChip } from './TableChip';
+import { buildSqlCompletions } from './suggestions';
 import { DATASETS, getDataset } from './datasets';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -67,6 +68,9 @@ export function SqlPage() {
 
   const quest = React.useMemo(() => QUESTS.find((q) => q.id === questId) ?? null, [questId]);
   const world = quest ? WORLDS.find((w) => w.id === quest.world) : undefined;
+
+  // Keywords + the live tables/columns of whatever database is loaded
+  const completions = React.useMemo(() => buildSqlCompletions(tables), [tables]);
 
   React.useEffect(() => {
     writeStore('sql:quest', questId);
@@ -298,6 +302,7 @@ export function SqlPage() {
           onRun={() => execute(!!quest)}
           minHeight={isDesktop ? 168 : 200}
           ariaLabel="SQL editor"
+          completions={completions}
         />
         <div className="mt-1.5 flex items-center gap-1.5">
           <span className="hidden shrink-0 items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest text-muted-foreground/40 sm:inline-flex">
