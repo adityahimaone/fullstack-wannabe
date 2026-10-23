@@ -38,7 +38,7 @@
 ## Phase 3 — Module 2: SQL Query Master Arena
 - [x] `sql.js` engine wrapper (init, exec, timing, error surface, schema introspection)
 - [x] Three themed datasets: E-Commerce Empire, Social Network, Guild RPG (+ generated rows)
-- [x] SQL editor with syntax highlighting, line numbers, mobile quick-keyword bar
+- [x] SQL editor with syntax highlighting and line numbers — *the planned mobile quick-keyword bar was superseded by the autocomplete dropdown, which is a better answer on a phone*
 - [x] Table chips reveal the live column schema on hover (tap on touch): type, PK / FK / UQ / NN / AI markers, click a column to copy its name
 - [x] Autocomplete in the editor — keywords, functions, tables and columns; `↑`/`↓` to move, `Tab`/`Enter` to insert, `Esc` to dismiss; typing `orders.` narrows to that table's columns; suppressed inside comments and strings
 - [x] Result grid (sticky header, null rendering, row count, exec time, error panel)
