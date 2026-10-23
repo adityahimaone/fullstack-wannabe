@@ -1,14 +1,23 @@
 import * as React from 'react';
 import { useToast } from '@/components/ui/toast';
+import { CHALLENGES } from '@/modules/dojo/challenges';
 import { readStore, usePersistentState, writeStore } from '@/lib/storage';
 
-export type Stack = 'go' | 'node' | 'php';
+export type Stack = 'go' | 'node' | 'frontend' | 'php';
 
 export const STACKS: { id: Stack; label: string; short: string; accent: string }[] = [
   { id: 'go', label: 'Go', short: 'GO', accent: 'text-cyan' },
   { id: 'node', label: 'Node.js', short: 'TS', accent: 'text-lime' },
+  { id: 'frontend', label: 'Frontend TS', short: 'UI', accent: 'text-amber' },
   { id: 'php', label: 'PHP', short: 'PHP', accent: 'text-violet' },
 ];
+
+/**
+ * Stacks the Blueprint module can generate. Its six layers are server-shaped
+ * (migration → model → repository → service → controller → router), so the
+ * Frontend TS track is Dojo-only and has no blueprint of its own.
+ */
+export const BACKEND_STACKS = STACKS.filter((s) => s.id !== 'frontend');
 
 export interface BadgeDef {
   id: string;
@@ -41,6 +50,12 @@ export const BADGES: BadgeDef[] = [
     name: 'Polyglot',
     description: 'Solve 6 dojo challenges across at least two stacks.',
     glyph: '⌁',
+  },
+  {
+    id: 'deep-end',
+    name: 'Deep End',
+    description: 'Clear a hard challenge in every stack, frontend included.',
+    glyph: '⚡',
   },
   {
     id: 'request-tracer',
@@ -213,7 +228,17 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
     if (state.quests.length > 0) unlock.push('first-query');
     if (state.quests.filter((q) => q.startsWith('w4-')).length >= 5) unlock.push('join-master');
-    if (state.challenges.length >= 6) unlock.push('polyglot');
+    const cleared = CHALLENGES.filter((c) => state.challenges.includes(c.id));
+    if (state.challenges.length >= 6 && new Set(cleared.map((c) => c.stack)).size >= 2) {
+      unlock.push('polyglot');
+    }
+    if (
+      STACKS.every((s) =>
+        cleared.some((c) => c.stack === s.id && c.difficulty === 'hard'),
+      )
+    ) {
+      unlock.push('deep-end');
+    }
     if (state.requests > 0) unlock.push('request-tracer');
     if (readStore<boolean>('erd:seeded', false) && state.steps.length > 0) unlock.push('schema-smith');
     const allSteps = ['go', 'node', 'php'].every((s) =>

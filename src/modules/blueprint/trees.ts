@@ -1111,10 +1111,23 @@ ${ctx.fields.map((f) => `            '${f.name}' => $this->${f.name},`).join('\n
   ];
 }
 
+/**
+ * Blueprint only generates server-side layers. The Frontend TS track lives in the
+ * Dojo, so it resolves to Node.js here rather than silently falling through to PHP.
+ */
+export function blueprintStack(stack: Stack): 'go' | 'node' | 'php' {
+  return stack === 'frontend' ? 'node' : stack;
+}
+
 export function stackFiles(stack: Stack): StackFile[] {
-  if (stack === 'go') return goFiles();
-  if (stack === 'node') return nodeFiles();
-  return phpFiles();
+  switch (blueprintStack(stack)) {
+    case 'go':
+      return goFiles();
+    case 'php':
+      return phpFiles();
+    default:
+      return nodeFiles();
+  }
 }
 
 /** Resolve `{table}` / `{base}` placeholders in a path. */

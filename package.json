@@ -8,6 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "check:dojo": "node scripts/check-dojo.mjs",
     "postinstall": "node scripts/copy-wasm.mjs"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.1",
     "sql.js": "^1.12.0",
+    "sucrase": "^3.35.1",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {

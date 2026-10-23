@@ -4,7 +4,7 @@ import { Flame, Menu, Moon, Sun } from 'lucide-react';
 import { Logo } from './Logo';
 import { NAV_ITEMS } from '@/lib/nav';
 import { cn } from '@/lib/utils';
-import { useProgress, STACKS } from '@/lib/progress';
+import { useProgress, STACKS, type Stack } from '@/lib/progress';
 import { useTheme } from '@/lib/theme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -108,7 +108,7 @@ export function MobileHeader() {
   );
 }
 
-function StackPill({ id, label, short }: { id: 'go' | 'node' | 'php'; label: string; short: string }) {
+function StackPill({ id, label, short }: { id: Stack; label: string; short: string }) {
   const { state, setActiveStack } = useProgress();
   return (
     <button

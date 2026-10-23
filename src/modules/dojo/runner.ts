@@ -6,10 +6,15 @@ export interface RunOutcome {
 }
 
 /**
- * Execute user JavaScript in a throwaway worker so an infinite loop
- * can be terminated without freezing the page.
+ * Execute user JavaScript (or TypeScript, transpiled in the worker) in a
+ * throwaway worker so an infinite loop can be terminated without freezing the page.
  */
-export function runJs(code: string, input: unknown, timeoutMs = 1600): Promise<RunOutcome> {
+export function runJs(
+  code: string,
+  input: unknown,
+  opts: { ts?: boolean; timeoutMs?: number } = {},
+): Promise<RunOutcome> {
+  const { ts = false, timeoutMs = 1600 } = opts;
   return new Promise((resolve) => {
     let settled = false;
     let worker: Worker;
@@ -40,7 +45,7 @@ export function runJs(code: string, input: unknown, timeoutMs = 1600): Promise<R
       finish({ ok: false, error: event.message || 'Runtime error' });
     };
 
-    worker.postMessage({ code, input });
+    worker.postMessage({ code, input, ts });
   });
 }
 

@@ -15,19 +15,20 @@ import { CodeEditor } from '@/components/CodeEditor';
 import { StateVisualizer } from './StateVisualizer';
 import {
   CHALLENGES,
+  DIFFICULTIES,
   STACK_META,
   challengesByStack,
   staticCheck,
   type Challenge,
+  type Difficulty,
 } from './challenges';
 import { deepEqualLoose, runJs } from './runner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useProgress, STACKS, type Stack } from '@/lib/progress';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useProgress, STACKS } from '@/lib/progress';
 import { usePersistentState, readStore, writeStore } from '@/lib/storage';
 import { useIsDesktop } from '@/lib/use-media';
-import { useToast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 
 interface Outcome {
@@ -38,13 +39,33 @@ interface Outcome {
   error?: string;
 }
 
+const DIFFICULTY_STYLE: Record<Difficulty, { text: string; badge: 'outline' | 'amber' | 'violet'; bar: string }> = {
+  easy: { text: 'text-lime', badge: 'outline', bar: 'bg-lime' },
+  medium: { text: 'text-amber', badge: 'amber', bar: 'bg-amber' },
+  hard: { text: 'text-violet', badge: 'violet', bar: 'bg-violet' },
+};
+
+function DifficultyPips({ pips, className }: { pips: number; className?: string }) {
+  return (
+    <span className={cn('inline-flex items-end gap-[2px]', className)} aria-hidden>
+      {[1, 2, 3].map((i) => (
+        <span
+          key={i}
+          className={cn('w-[3px] rounded-[1px] bg-current', i <= pips ? '' : 'opacity-25')}
+          style={{ height: `${2 + i * 2}px` }}
+        />
+      ))}
+    </span>
+  );
+}
+
 export function DojoPage() {
   const { state, completeChallenge, setActiveStack } = useProgress();
   const isDesktop = useIsDesktop();
-  const { push } = useToast();
   const stack = state.activeStack;
 
   const [challengeId, setChallengeId] = usePersistentState<string | null>(`dojo:active:${stack}`, null);
+  const [difficulty, setDifficulty] = usePersistentState<Difficulty | 'all'>('dojo:difficulty', 'all');
   const [drafts, setDrafts] = React.useState<Record<string, string>>(() =>
     readStore<Record<string, string>>('dojo:drafts', {}),
   );
@@ -53,9 +74,13 @@ export function DojoPage() {
   const [showSolution, setShowSolution] = React.useState(false);
 
   const list = React.useMemo(() => challengesByStack(stack), [stack]);
+  const visible = React.useMemo(
+    () => (difficulty === 'all' ? list : list.filter((c) => c.difficulty === difficulty)),
+    [list, difficulty],
+  );
   const challenge = React.useMemo(
-    () => list.find((c) => c.id === challengeId) ?? list[0],
-    [list, challengeId],
+    () => visible.find((c) => c.id === challengeId) ?? list.find((c) => c.id === challengeId) ?? visible[0] ?? list[0],
+    [visible, list, challengeId],
   );
 
   React.useEffect(() => {
@@ -66,6 +91,16 @@ export function DojoPage() {
     setShowSolution(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stack]);
+
+  // Keep the selection inside the active filter so the editor never shows a hidden challenge.
+  React.useEffect(() => {
+    if (visible.length > 0 && !visible.some((c) => c.id === challengeId)) {
+      setChallengeId(visible[0].id);
+      setOutcome(null);
+      setShowSolution(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [difficulty, stack]);
 
   const code = drafts[challenge.id] ?? challenge.starter;
 
@@ -88,8 +123,9 @@ export function DojoPage() {
     setOutcome(null);
     try {
       if (challenge.mode === 'run') {
-        const expected = await runJs(challenge.solution, challenge.payload);
-        const actual = await runJs(code, challenge.payload);
+        const opts = { ts: challenge.ts };
+        const expected = await runJs(challenge.solution, challenge.payload, opts);
+        const actual = await runJs(code, challenge.payload, opts);
 
         if (!actual.ok) {
           setOutcome({
@@ -97,6 +133,12 @@ export function DojoPage() {
             message: actual.timedOut ? 'Execution timed out.' : 'Your code threw an error.',
             error: actual.error,
             expected: expected.result,
+          });
+        } else if (!expected.ok) {
+          setOutcome({
+            ok: false,
+            message: 'The reference implementation failed — please report this challenge.',
+            error: expected.error,
           });
         } else {
           const ok = deepEqualLoose(actual.result, expected.result);
@@ -129,60 +171,116 @@ export function DojoPage() {
     }
   };
 
-  const tracks = React.useMemo(() => {
-    const map = new Map<string, Challenge[]>();
-    list.forEach((c) => {
-      map.set(c.track, [...(map.get(c.track) ?? []), c]);
-    });
-    return [...map.entries()];
+  /** Easy → hard buckets; within a bucket the authored order is kept. */
+  const groups = React.useMemo(
+    () =>
+      DIFFICULTIES.map((d) => ({
+        ...d,
+        items: visible.filter((c) => c.difficulty === d.id),
+      })).filter((g) => g.items.length > 0),
+    [visible],
+  );
+
+  const counts = React.useMemo(() => {
+    const byDiff = (d: Difficulty) => list.filter((c) => c.difficulty === d).length;
+    return {
+      all: list.length,
+      easy: byDiff('easy'),
+      medium: byDiff('medium'),
+      hard: byDiff('hard'),
+    };
   }, [list]);
 
   const solvedCount = list.filter((c) => state.challenges.includes(c.id)).length;
 
+  const difficultyChips = (
+    <div className="grid grid-cols-2 gap-1">
+      {([{ id: 'all' as const, label: 'All', pips: 0 }, ...DIFFICULTIES] as const).map((d) => {
+        const active = difficulty === d.id;
+        const total = counts[d.id];
+        return (
+          <button
+            key={d.id}
+            type="button"
+            onClick={() => setDifficulty(d.id)}
+            aria-pressed={active}
+            className={cn(
+              'flex items-center justify-center gap-1 rounded-sm border px-1 py-1 font-mono text-[0.5625rem] uppercase tracking-wider transition-colors',
+              active
+                ? d.id === 'all'
+                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  : cn('border-current/40 bg-current/10', DIFFICULTY_STYLE[d.id].text)
+                : 'border-border text-muted-foreground hover:text-foreground',
+            )}
+          >
+            {d.id !== 'all' && <DifficultyPips pips={d.pips} />}
+            {d.label}
+            <span className="text-[0.5rem] opacity-60">{total}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
   const challengeList = (
     <div className="space-y-3">
-      {tracks.map(([track, items]) => (
-        <div key={track}>
-          <p className="eyebrow mb-1.5 px-1">{track}</p>
-          <ul className="space-y-0.5">
-            {items.map((c) => {
-              const done = state.challenges.includes(c.id);
-              const active = c.id === challenge.id;
-              return (
-                <li key={c.id}>
-                  <button
-                    type="button"
-                    onClick={() => selectChallenge(c)}
-                    className={cn(
-                      'flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left transition-colors',
-                      active
-                        ? 'bg-primary/10 text-foreground'
-                        : 'text-muted-foreground hover:bg-elevated hover:text-foreground',
-                    )}
-                  >
-                    <span
+      {groups.map((group) => {
+        const style = DIFFICULTY_STYLE[group.id];
+        const cleared = group.items.filter((c) => state.challenges.includes(c.id)).length;
+        return (
+          <div key={group.id}>
+            <div className="mb-1.5 flex items-center gap-1.5 px-1">
+              <DifficultyPips pips={group.pips} className={style.text} />
+              <p className={cn('eyebrow', style.text)}>{group.label}</p>
+              <span className="numeric ml-auto font-mono text-[0.5rem] text-muted-foreground/60">
+                {cleared}/{group.items.length}
+              </span>
+            </div>
+            <ul className="space-y-0.5">
+              {group.items.map((c) => {
+                const done = state.challenges.includes(c.id);
+                const active = c.id === challenge.id;
+                return (
+                  <li key={c.id}>
+                    <button
+                      type="button"
+                      onClick={() => selectChallenge(c)}
                       className={cn(
-                        'grid h-3.5 w-3.5 shrink-0 place-items-center rounded-full border',
-                        done
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : active
-                            ? 'border-primary'
-                            : 'border-border',
+                        'flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left transition-colors',
+                        active
+                          ? 'bg-primary/10 text-foreground'
+                          : 'text-muted-foreground hover:bg-elevated hover:text-foreground',
                       )}
                     >
-                      {done && <CheckCircle2 className="h-2.5 w-2.5" strokeWidth={3} />}
-                    </span>
-                    <span className="min-w-0 flex-1 truncate text-[0.75rem]">{c.title}</span>
-                    <span className="numeric shrink-0 font-mono text-[0.5625rem] text-muted-foreground/70">
-                      {c.xp}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+                      <span
+                        className={cn(
+                          'grid h-3.5 w-3.5 shrink-0 place-items-center rounded-full border',
+                          done
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : active
+                              ? 'border-primary'
+                              : 'border-border',
+                        )}
+                      >
+                        {done && <CheckCircle2 className="h-2.5 w-2.5" strokeWidth={3} />}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-[0.75rem]">{c.title}</span>
+                      <span className="numeric shrink-0 font-mono text-[0.5625rem] text-muted-foreground/70">
+                        {c.xp}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })}
+      {groups.length === 0 && (
+        <p className="px-2 py-6 text-center text-[0.75rem] text-muted-foreground">
+          No {difficulty} challenges in this stack yet.
+        </p>
+      )}
     </div>
   );
 
@@ -197,7 +295,7 @@ export function DojoPage() {
             type="button"
             onClick={() => setActiveStack(s.id)}
             className={cn(
-              'flex flex-1 items-center justify-center gap-1.5 rounded-sm border px-2 py-1.5 font-mono text-[0.625rem] uppercase tracking-wider transition-colors',
+              'flex flex-1 items-center justify-center gap-1 rounded-sm border px-1 py-1.5 font-mono text-[0.625rem] uppercase tracking-wider transition-colors',
               stack === s.id
                 ? 'border-primary/50 bg-primary/10 text-primary'
                 : 'border-border text-muted-foreground hover:text-foreground',
@@ -219,8 +317,9 @@ export function DojoPage() {
         <Badge variant="outline">{challenge.track}</Badge>
         <span className="display text-[0.9375rem]">{challenge.title}</span>
         <div className="ml-auto flex items-center gap-1.5">
-          <Badge variant={challenge.level === 'boss' ? 'violet' : challenge.level === 'core' ? 'amber' : 'outline'}>
-            {challenge.level}
+          <Badge variant={DIFFICULTY_STYLE[challenge.difficulty].badge}>
+            <DifficultyPips pips={DIFFICULTIES.find((d) => d.id === challenge.difficulty)!.pips} />
+            {challenge.difficulty}
           </Badge>
           <Badge variant="lime">+{challenge.xp} XP</Badge>
         </div>
@@ -251,7 +350,9 @@ export function DojoPage() {
           {showSolution ? 'Hide' : 'Reveal'}
         </Button>
         <span className="ml-auto font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground/60">
-          {challenge.mode === 'run' ? 'sandboxed js · 1.6s limit' : 'static analysis'}
+          {challenge.mode === 'run'
+            ? `sandboxed ${challenge.ts ? 'ts' : 'js'} · 1.6s limit`
+            : 'static analysis'}
         </span>
       </div>
       <div className="px-3 pb-3">
@@ -379,7 +480,7 @@ export function DojoPage() {
             Polyglot <span className="text-muted-foreground/50">Dojo</span>
           </>
         }
-        description="The same payload transformation, written three ways. Go maps, JS array methods, Laravel collections — build the muscle memory before the API needs it."
+        description="The same payload transformation, written four ways. Go maps, JS array methods, TypeScript state shaping, Laravel collections — build the muscle memory before the API needs it."
         actions={
           <Badge variant="outline">
             {solvedCount}/{list.length} {STACK_META[stack].label} cleared
@@ -393,6 +494,8 @@ export function DojoPage() {
             <div className="shrink-0 space-y-2 border-b border-border p-2.5">
               <p className="eyebrow">Stack</p>
               {stackSwitcher}
+              <p className="eyebrow pt-0.5">Difficulty</p>
+              {difficultyChips}
               <p className="font-mono text-[0.5625rem] leading-relaxed text-muted-foreground/70">
                 {STACK_META[stack].tagline}
               </p>
@@ -411,16 +514,22 @@ export function DojoPage() {
           <div className="panel p-2.5">
             <div className="space-y-2">
               {stackSwitcher}
+              {difficultyChips}
               <Select value={challenge.id} onValueChange={(v) => selectChallenge(list.find((c) => c.id === v)!)}>
                 <SelectTrigger className="h-8 font-mono text-[0.6875rem]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {list.map((c) => (
-                    <SelectItem key={c.id} value={c.id} className="text-xs">
-                      {state.challenges.includes(c.id) ? '✓ ' : ''}
-                      {c.title}
-                    </SelectItem>
+                  {groups.map((group) => (
+                    <SelectGroup key={group.id}>
+                      <SelectLabel>{group.label}</SelectLabel>
+                      {group.items.map((c) => (
+                        <SelectItem key={c.id} value={c.id} className="text-xs">
+                          {state.challenges.includes(c.id) ? '✓ ' : ''}
+                          {c.title}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   ))}
                 </SelectContent>
               </Select>
@@ -433,10 +542,11 @@ export function DojoPage() {
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface/60 px-3 py-2">
-        <ShieldCheck className="h-3.5 w-3.5 text-lime" />
-        <p className="text-[0.6875rem] leading-relaxed text-muted-foreground">
-          JS runs in a disposable worker with a 1.6s budget. Go and PHP are verified by static analysis of the
-          required constructs plus a reference output you can compare by eye.
+        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-lime" />
+        <p className="min-w-0 flex-1 text-[0.6875rem] leading-relaxed text-muted-foreground">
+          JS and TypeScript run in a disposable worker with a 1.6s budget — TypeScript is transpiled on the fly, so
+          types, interfaces and generics work as written. Go and PHP are verified by static analysis of the required
+          constructs plus a reference output you can compare by eye.
         </p>
         <span className="ml-auto inline-flex items-center gap-1 font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground">
           {CHALLENGES.length} challenges

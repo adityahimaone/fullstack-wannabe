@@ -6,11 +6,11 @@ import { CodeViewer } from '@/components/CodeViewer';
 import { FolderTree } from './FolderTree';
 import { Pipeline } from './Pipeline';
 import { ApiTester } from './ApiTester';
-import { STEPS, resolvePath, stackFiles, type StackFile } from './trees';
+import { STEPS, blueprintStack, resolvePath, stackFiles, type StackFile } from './trees';
 import { deriveContext } from './ctx';
 import { useErd } from '@/modules/erd/store';
 import { useMediaQuery } from '@/lib/use-media';
-import { useProgress, STACKS } from '@/lib/progress';
+import { useProgress, BACKEND_STACKS } from '@/lib/progress';
 import { readStore, writeStore } from '@/lib/storage';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,8 @@ export function BlueprintPage() {
   const { schema, seed } = useErd();
   const { state, completeStep, setActiveStack, registerRequest } = useProgress();
   const navigate = useNavigate();
-  const stack = state.activeStack;
+  const requestedStack = state.activeStack;
+  const stack = blueprintStack(requestedStack);
   const isXl = useMediaQuery('(min-width: 1280px)');
 
   const [selectedPath, setSelectedPath] = React.useState<string>('');
@@ -62,7 +63,7 @@ export function BlueprintPage() {
       <div className="shrink-0 space-y-2 border-b border-border p-2.5">
         <p className="eyebrow">Stack</p>
         <div className="flex gap-1">
-          {STACKS.map((s) => (
+          {BACKEND_STACKS.map((s) => (
             <button
               key={s.id}
               type="button"
@@ -81,6 +82,11 @@ export function BlueprintPage() {
         <p className="font-mono text-[0.5rem] leading-relaxed text-muted-foreground/60">
           {files.length} files · {doneSteps.length}/6 layers visited
         </p>
+        {requestedStack === 'frontend' && (
+          <p className="rounded-sm border border-amber/25 bg-amber/5 px-1.5 py-1 font-mono text-[0.5rem] leading-relaxed text-amber/90">
+            Frontend TS is Dojo-only. The blueprint generates the server that feeds it — showing Node.js.
+          </p>
+        )}
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto p-2">
         <FolderTree

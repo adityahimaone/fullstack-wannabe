@@ -1,13 +1,19 @@
 /// <reference lib="webworker" />
+import { transform } from 'sucrase';
 
-type Payload = { code: string; input: unknown };
+type Payload = { code: string; input: unknown; ts?: boolean };
 
 self.onmessage = async (event: MessageEvent<Payload>) => {
-  const { code, input } = event.data;
+  const { code, input, ts } = event.data;
   try {
+    // TypeScript is transpiled inside the worker — same sandbox, same timeout.
+    const source = ts
+      ? transform(code, { transforms: ['typescript'], disableESTransforms: true }).code
+      : code;
+
     const factory = new Function(
       'data',
-      `"use strict";\n${code}\n;return typeof solve === 'function' ? solve(data) : undefined;`,
+      `"use strict";\n${source}\n;return typeof solve === 'function' ? solve(data) : undefined;`,
     );
     const result = await factory(input);
     // structured-clone friendly round trip

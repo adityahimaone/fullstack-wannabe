@@ -4,9 +4,10 @@
 > Rule: every task is checked off **only after the code is written and the build passes**.
 > E2E/Playwright suite intentionally skipped for fast delivery (see "Deferred").
 >
-> **Status: shipped.** `tsc --noEmit` clean, `vite build` clean (17s, 894 kB main / 302 kB gzip).
-> Verified against the **production build** (`vite preview`): 11/11 functional checks pass,
-> 0 console errors, 0 horizontal overflow across 20 route × breakpoint combos.
+> **Status: shipped.** `tsc --noEmit` clean, `vite build` clean. Verified against the
+> **production build** (`vite preview`): 15/15 functional checks pass, 0 console errors,
+> 0 horizontal overflow across 20 route × breakpoint combos. `npm run check:dojo` covers the
+> 30-challenge bank offline.
 
 ## Phase 0 — Scaffold & Tooling
 - [x] Vite + React 18 + TypeScript (`strict`) project initialized
@@ -49,11 +50,16 @@
 ## Phase 4 — Module 3: Polyglot Dojo
 - [x] Go arena: maps (make/delete/comma-ok/iteration), slices (append/len/cap), structs & pointers, goroutines/channels
 - [x] Node arena: map/filter/reduce/find, destructuring/spread, Map/Set/Record, async + Promise.all/allSettled ordering
+- [x] **Frontend TS arena** — 8 challenges that run for real: Intl money formatting, grouping derived from state, pagination windows, a reducer over a discriminated union, optimistic row patching, form-error maps, tree flattening, memo diffing
 - [x] PHP arena: array_map/filter/reduce, isset/??, Collections (pluck/groupBy/mapWithKeys), PHP 8 promotion/readonly/enums/match
+- [x] **Difficulty axis** — every challenge tagged `easy | medium | hard`, XP scaled to it (35 → 100), list grouped Easy → Medium → Hard with per-bucket counters, filter chips (All / Easy / Medium / Hard), difficulty badge on the brief
+- [x] 30 challenges total: Go 7 (2/3/2), Node 8 (2/4/2), Frontend 8 (3/3/2), PHP 7 (2/3/2) — every stack covers all three difficulties
 - [x] "Transform the Payload" puzzles — *payload is a shared `ORDERS` fixture shaped exactly like the SQL `orders` table, not live-linked to the query result*
 - [x] Bug Hunter: unhandled rejection (`Bug hunter: survive a rejection`) — *the nil-map-panic and N+1 variants were not written*
 - [x] Live JS execution sandbox + memory/state visualizer (step-through data structure diff)
+- [x] **TypeScript executes in the sandbox** — `sucrase` transpiles inside the worker, so `interface` / `type` / generics / annotations work as written, with the same 1.6 s kill switch
 - [x] Static-analysis validator for Go/PHP (acceptance rules + expected output)
+- [x] `npm run check:dojo` — 16 reference solutions executed, 14 graded through the real `staticCheck()`, starters verified not to pass on their own
 
 ## Phase 5 — Module 4: Backend Blueprint
 - [x] Folder trees for Go (Standard Layout + Clean Architecture), Node (modular Prisma/Express), PHP (Laravel service/repo)
@@ -63,6 +69,7 @@
 - [x] Mini-Postman tester: method/path/body, simulated latency, status codes, JSON response
 - [x] Animated request trace across pipeline + folder tree
 - [x] Step completion + "Fullstack Architect" badge
+- [x] The Frontend TS track is scoped to the Dojo — Blueprint's six layers are server-shaped, so selecting UI there resolves to Node.js with an explicit note instead of silently rendering the PHP tree
 
 ## Phase 6 — Polish & Verification
 - [x] Responsive audit at 375 / 768 / 1024 / 1440 (no horizontal scroll, no hidden-critical-feature) — 20/20 combos clean
@@ -81,6 +88,19 @@
       Composite keys are now emitted once as a table constraint, with explicit `NOT NULL` on members.
 - [x] Seeder drew junction sides independently, so duplicate pairs collided with that key.
       It now enumerates the real combinations and samples distinct pairs.
+- [x] `staticCheck` stripped comments from the submission but not from the starter before
+      comparing lengths, so a heavily-commented starter made correct Go/PHP answers report
+      "Nothing changed yet". Both sides are now normalised the same way.
+- [x] `go-pointer-receiver`'s reference solution was shorter than its starter, which tripped
+      that same guard — it now ships the struct so the reference is self-contained.
+- [x] `fe-validate`'s payload was wrapped in `{ values }` while its signature took the values
+      object directly, so the reference threw on load.
+- [x] `go-error-wrap` and `php-match` had acceptance patterns their own reference solutions
+      could not satisfy (`errors.Is` / the enum lived in the starter only).
+- [x] `stackFiles()` fell through to the PHP tree for any unrecognised stack, which would have
+      shown Laravel files under the Frontend TS track. Now an explicit switch.
+- [x] The "Polyglot" badge claimed "at least two stacks" but only counted challenges; it now
+      checks distinct stacks. Added "Deep End" for a hard clear in every stack.
 
 ## Deferred (explicitly skipped)
 - [ ] E2E / Playwright suite — skipped for fast development

@@ -47,7 +47,7 @@ export const NAV_ITEMS: NavItem[] = [
     short: 'Dojo',
     code: '03',
     icon: Braces,
-    blurb: 'Maps, arrays, collections — by hand.',
+    blurb: 'Maps, arrays, types, collections — by hand.',
   },
   {
     to: '/blueprint',

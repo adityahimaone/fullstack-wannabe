@@ -233,7 +233,7 @@ export function Dashboard() {
             {state.badges.length} of {BADGES.length}
           </span>
         </div>
-        <div className="grid grid-cols-2 divide-x divide-y divide-border sm:grid-cols-3 lg:grid-cols-6 lg:divide-y-0">
+        <div className="grid grid-cols-2 divide-x divide-y divide-border sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 xl:divide-y-0">
           {BADGES.map((badge) => {
             const earned = hasBadge(badge.id);
             return (
