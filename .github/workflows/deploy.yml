@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Manual re-deploy from the Actions tab or `gh workflow run deploy.yml`.
+  workflow_dispatch:
 
 # Least-privilege: only the push-to-main job is allowed to deploy. PRs validate
 # the build + deploy config with a dry-run that needs no credentials.
