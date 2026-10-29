@@ -6,6 +6,10 @@ dist/
 dist-ssr/
 *.tsbuildinfo
 
+# generated assets — reproducible with `npm run shots` (4.6MB and churns on
+# every design tweak, so it stays out of history; regenerate before reviewing)
+brand/shots/
+
 # logs
 npm-debug.log*
 yarn-debug.log*

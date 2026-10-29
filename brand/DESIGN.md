@@ -186,7 +186,7 @@ brand/
   contrast-audit.json   (last run: pairs scanned + failures)
   assets/wannabe-brandkit.png
   explore/   (the two rounds, kept as evidence)
-  shots/     (screenshots, produced by scripts/shot.mjs)
+  shots/     (screenshots from scripts/shot.mjs — gitignored, regenerate on demand)
 
 scripts/
   audit-contrast.mjs   DOM contrast audit over the production build
