@@ -38,10 +38,10 @@ const ROW_HEIGHT = 23;
 const MENU_CHROME = 25;
 
 const GLYPH: Record<CompletionKind, { ch: string; className: string }> = {
-  table: { ch: 'T', className: 'text-cyan' },
-  column: { ch: 'C', className: 'text-violet' },
-  keyword: { ch: 'K', className: 'text-lime' },
-  function: { ch: 'F', className: 'text-amber' },
+  table: { ch: 'T', className: 'text-cyan-ink' },
+  column: { ch: 'C', className: 'text-grape-ink' },
+  keyword: { ch: 'K', className: 'text-lime-ink' },
+  function: { ch: 'F', className: 'text-mango-ink' },
 };
 
 export function CodeEditor({
@@ -219,7 +219,7 @@ export function CodeEditor({
   return (
     <div
       className={cn(
-        'relative flex overflow-hidden rounded-md border border-border bg-[color-mix(in_oklch,var(--background)_72%,var(--surface))] font-mono text-[0.8125rem] leading-[1.65] focus-within:border-primary/50',
+        'relative flex overflow-hidden rounded-[12px] border-[2.5px] border-edge bg-elevated font-mono text-[0.8125rem] leading-[1.65] transition-[border-color,box-shadow] focus-within:border-grape focus-within:shadow-[3px_3px_0_0_var(--grape)]',
         className,
       )}
       style={{ minHeight }}
@@ -228,7 +228,7 @@ export function CodeEditor({
         <div
           ref={gutterRef}
           aria-hidden
-          className="w-9 shrink-0 select-none overflow-hidden border-r border-border/60 bg-surface/50 py-3 text-right text-[0.75rem] text-muted-foreground/35"
+          className="w-9 shrink-0 select-none overflow-hidden border-r-[1.5px] border-border bg-muted py-3 text-right text-[0.75rem] text-tertiary"
         >
           {Array.from({ length: lines }, (_, i) => (
             <div key={i} className="pr-2">
@@ -282,7 +282,7 @@ export function CodeEditor({
           aria-expanded={!!menu}
           placeholder={placeholder}
           className={cn(
-            'absolute inset-0 h-full w-full resize-none bg-transparent p-3 text-transparent caret-primary outline-none placeholder:text-muted-foreground/40 selection:bg-primary/25',
+            'absolute inset-0 h-full w-full resize-none bg-transparent p-3 text-transparent caret-primary outline-none placeholder:text-tertiary selection:bg-primary/25',
             wrap ? 'overflow-y-auto break-words no-scrollbar' : 'overflow-auto whitespace-pre',
           )}
         />
@@ -294,7 +294,7 @@ export function CodeEditor({
             role="listbox"
             aria-label="Suggestions"
             style={{ position: 'fixed', top: menu.top, left: menu.left, width: MENU_WIDTH }}
-            className="z-[90] overflow-hidden rounded-md border border-border bg-popover shadow-xl shadow-black/40"
+            className="z-[90] overflow-hidden rounded-[12px] border-[2.5px] border-edge bg-popover shadow-hard-lg"
           >
             <ul className="max-h-[240px] overflow-y-auto py-1">
               {menu.items.map((item, i) => {
@@ -326,13 +326,13 @@ export function CodeEditor({
                     <span
                       className={cn(
                         'truncate font-mono text-[0.6875rem]',
-                        i === menu.active ? 'text-primary' : 'text-foreground',
+                        i === menu.active ? 'text-primary-ink' : 'text-foreground',
                       )}
                     >
                       {item.label}
                     </span>
                     {item.detail && (
-                      <span className="ml-auto shrink-0 font-mono text-[0.5rem] uppercase tracking-wider text-muted-foreground/70">
+                      <span className="ml-auto shrink-0 font-mono text-[0.5rem] uppercase tracking-wider text-muted-foreground">
                         {item.detail}
                       </span>
                     )}
@@ -340,7 +340,7 @@ export function CodeEditor({
                 );
               })}
             </ul>
-            <div className="flex items-center justify-between border-t border-border px-2 py-1 font-mono text-[0.5rem] uppercase tracking-widest text-muted-foreground/60">
+            <div className="flex items-center justify-between border-t border-border px-2 py-1 font-mono text-[0.5rem] uppercase tracking-widest text-tertiary">
               <span>↑↓ move · tab insert</span>
               <span>esc</span>
             </div>

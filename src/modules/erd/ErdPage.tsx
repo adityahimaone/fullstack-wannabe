@@ -60,7 +60,7 @@ export function ErdPage() {
         eyebrow="01 · Architect mode"
         title={
           <>
-            Schema <span className="text-muted-foreground/50">Studio</span>
+            Schema <span className="text-tertiary">Studio</span>
           </>
         }
         description="Drag tables, wire relations between columns, and watch production-grade DDL compile as you work. Everything you build here can be seeded and queried in the next module."
@@ -242,7 +242,7 @@ export function ErdPage() {
           },
         ].map((tip) => (
           <div key={tip.title} className="rounded-md border border-border bg-surface/60 p-3">
-            <p className="font-mono text-[0.625rem] uppercase tracking-widest text-primary">{tip.title}</p>
+            <p className="font-mono text-[0.625rem] uppercase tracking-widest text-primary-ink">{tip.title}</p>
             <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted-foreground">{tip.body}</p>
           </div>
         ))}

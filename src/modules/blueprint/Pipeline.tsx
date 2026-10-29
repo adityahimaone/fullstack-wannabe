@@ -48,9 +48,9 @@ export function Pipeline({
                   className={cn(
                     'grid h-5 w-5 shrink-0 place-items-center rounded-sm border transition-colors',
                     done
-                      ? 'border-primary/50 bg-primary/15 text-primary'
+                      ? 'border-primary/50 bg-primary/15 text-primary-ink'
                       : active
-                        ? 'border-primary/50 text-primary'
+                        ? 'border-primary/50 text-primary-ink'
                         : 'border-border text-muted-foreground',
                   )}
                 >
@@ -73,7 +73,7 @@ export function Pipeline({
               </span>
               {/* The wide (w-[150px]) scroller cards have room for the hint; the
                   6-up grid at lg does not, so it is hidden there instead. */}
-              <span className="truncate font-mono text-[0.5rem] uppercase leading-tight tracking-wider text-muted-foreground/50 lg:hidden">
+              <span className="truncate font-mono text-[0.5rem] uppercase leading-tight tracking-wider text-tertiary lg:hidden">
                 {step.teaches.split(',')[0]}
               </span>
             </button>

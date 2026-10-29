@@ -162,18 +162,18 @@ function CanvasInner({
         <Background variant={BackgroundVariant.Dots} gap={28} size={1} color="var(--grid-line)" />
         <Controls
           showInteractive={false}
-          className="!bottom-4 !left-4 !shadow-lg [&>button]:!border-border [&>button]:!bg-surface"
+          className="!bottom-4 !left-4 !shadow-none [&>button]:!bg-elevated"
         />
       </ReactFlow>
 
-      <div className="pointer-events-none absolute bottom-4 left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-surface/90 px-3 py-1.5 font-mono text-[0.625rem] uppercase tracking-wider text-muted-foreground backdrop-blur md:flex">
+      <div className="pointer-events-none absolute bottom-4 left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border-[2px] border-edge bg-elevated px-3 py-1.5 font-mono text-[0.625rem] uppercase tracking-wider text-muted-foreground md:flex">
         <span className="h-1 w-1 rounded-full bg-lime" />
         drag a column handle onto another table to relate
       </div>
 
       {schema.tables.length === 0 && (
         <div className="absolute inset-0 grid place-items-center p-6">
-          <div className="max-w-xs rounded-lg border border-dashed border-border bg-surface/80 p-6 text-center backdrop-blur">
+          <div className="max-w-xs rounded-[14px] border-[2.5px] border-dashed border-edge bg-elevated p-6 text-center">
             <p className="display text-base">An empty canvas</p>
             <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted-foreground">
               Every API starts with a table. Drop one in and the DDL writes itself.

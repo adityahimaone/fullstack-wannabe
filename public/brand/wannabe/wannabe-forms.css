@@ -1,0 +1,234 @@
+/* ─────────────────────────────────────────────────────────────────────
+   fullstack wannabe · form kit v1.0
+   Fields are cut from the same sheet as the mark: 2.5px edge, 4px hard
+   offset, one fill. Focus reads as the field being pressed into its own
+   shadow — not as a glow.
+
+   Requires wannabe-tokens.css (--wb-* primitives + semantic aliases).
+   ───────────────────────────────────────────────────────────────────── */
+
+:root {
+  --field-bg: var(--wb-raised);
+  --field-edge: var(--wb-edge-w) solid var(--wb-ink);
+  --field-radius: var(--wb-radius-md);
+  --field-offset: 3px;
+  --field-pad: 12px 14px;
+  --field-font: 16px/1.4 "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --field-label: 10.5px;
+}
+
+/* ── text fields ─────────────────────────────────────────────────────── */
+.wb-field { display: grid; gap: 7px; }
+
+.wb-field > label,
+.wb-label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: var(--field-label);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--wb-text2);
+}
+
+.wb-input {
+  width: 100%;
+  padding: var(--field-pad);
+  font: var(--field-font);
+  color: var(--wb-ink);
+  background: var(--field-bg);
+  border: var(--field-edge);
+  border-radius: var(--field-radius);
+  box-shadow: var(--field-offset) var(--field-offset) 0 var(--wb-ink);
+  transition: box-shadow var(--wb-t-press) var(--wb-pop),
+              transform var(--wb-t-press) var(--wb-pop),
+              border-color var(--wb-t-pop) linear;
+}
+
+.wb-input::placeholder { color: color-mix(in srgb, var(--wb-text2) 70%, transparent); }
+
+.wb-input:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: calc(var(--field-offset) + 1px) calc(var(--field-offset) + 1px) 0 var(--wb-ink);
+}
+
+.wb-input:focus,
+.wb-input:focus-visible {
+  outline: none;
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wb-grape) 34%, transparent);
+  border-color: var(--wb-grape);
+}
+
+/* invalid — colour + icon + text, never colour alone */
+.wb-input[aria-invalid="true"] {
+  border-color: var(--wb-chili);
+  box-shadow: var(--field-offset) var(--field-offset) 0 var(--wb-chili);
+}
+
+.wb-input[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wb-chili) 30%, transparent);
+}
+
+.wb-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--wb-ink);
+  background: color-mix(in srgb, var(--field-bg) 60%, var(--wb-paper));
+}
+
+/* success is a state of the field, not a new component */
+.wb-input[data-state="success"] {
+  border-color: var(--wb-mint);
+  box-shadow: var(--field-offset) var(--field-offset) 0 var(--wb-mint);
+}
+
+.wb-hint { font-size: 13px; line-height: 1.45; color: var(--wb-text2); }
+
+.wb-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wb-chili);
+}
+
+.wb-error::before {
+  content: "!";
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--wb-chili);
+  color: var(--wb-ondanger);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* error summary: the first thing a screen reader should meet */
+.wb-error-summary {
+  border: var(--wb-edge-w) solid var(--wb-chili);
+  border-radius: var(--wb-radius-md);
+  background: color-mix(in srgb, var(--wb-chili) 12%, var(--wb-raised));
+  box-shadow: 3px 3px 0 var(--wb-chili);
+  padding: 14px 16px;
+}
+.wb-error-summary h2 {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+}
+.wb-error-summary ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.wb-error-summary a { color: inherit; text-underline-offset: 2px; }
+
+/* ── switch ──────────────────────────────────────────────────────────── */
+.wb-switch {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  padding: 0;
+  border: var(--wb-edge-w) solid var(--wb-ink);
+  border-radius: 999px;
+  background: var(--field-bg);
+  box-shadow: var(--field-offset) var(--field-offset) 0 var(--wb-ink);
+  cursor: pointer;
+  transition: background var(--wb-t-pop) linear;
+}
+.wb-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  border-radius: 999px;
+  background: var(--wb-ink);
+  transition: translate var(--wb-t-pop) var(--wb-pop), background var(--wb-t-pop) linear;
+}
+.wb-switch[aria-checked="true"] { background: var(--wb-lime); }
+.wb-switch[aria-checked="true"]::after { translate: 22px 0; background: var(--wb-oncandy); }
+.wb-switch:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wb-grape) 34%, transparent);
+}
+
+/* ── radio / checkbox ────────────────────────────────────────────────── */
+.wb-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  border: var(--wb-edge-w) solid var(--wb-ink);
+  border-radius: var(--wb-radius-md);
+  background: var(--field-bg);
+  font-size: 15px;
+  cursor: pointer;
+}
+.wb-choice:has(input:checked) {
+  background: color-mix(in srgb, var(--wb-grape) 12%, var(--field-bg));
+}
+.wb-choice input {
+  appearance: none;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 2.5px solid var(--wb-ink);
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+}
+.wb-choice input[type="radio"] { border-radius: 999px; }
+.wb-choice input:checked { background: var(--wb-grape); }
+.wb-choice input:checked::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--wb-ongrape);
+}
+.wb-choice input[type="radio"]:checked::after { border-radius: 999px; }
+.wb-choice input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wb-grape) 34%, transparent);
+}
+
+/* ── file ────────────────────────────────────────────────────────────── */
+.wb-file {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  background: var(--field-bg);
+  border: var(--wb-edge-w) dashed var(--wb-ink);
+  border-radius: var(--wb-radius-md);
+  color: var(--wb-text2);
+}
+.wb-file::file-selector-button {
+  margin-right: 12px;
+  padding: 7px 12px;
+  border: 2px solid var(--wb-ink);
+  border-radius: 9px;
+  background: var(--wb-mango);
+  color: var(--wb-oncandy);
+  font: 650 13px "Instrument Sans", sans-serif;
+  cursor: pointer;
+}
+
+/* ── counter ─────────────────────────────────────────────────────────── */
+.wb-count {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--wb-text2);
+  font-variant-numeric: tabular-nums;
+}
+.wb-count[data-over="true"] { color: var(--wb-chili); font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-input, .wb-switch, .wb-switch::after { transition-duration: 0.001ms; }
+}

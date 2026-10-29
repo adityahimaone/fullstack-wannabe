@@ -10,7 +10,10 @@
     "typecheck": "tsc --noEmit",
     "check:dojo": "node scripts/check-dojo.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "postinstall": "node scripts/copy-wasm.mjs"
+    "shots": "node scripts/shot.mjs",
+    "brand": "node brand/build-marks.mjs && node brand/tokens.mjs && node brand/build-react.mjs && node brand/build-page.mjs",
+    "postinstall": "node scripts/copy-wasm.mjs",
+    "audit": "node scripts/audit-contrast.mjs"
   },
   "dependencies": {
     "@faker-js/faker": "^9.3.0",

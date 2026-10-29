@@ -101,7 +101,7 @@ export function ErdInspector({
 
       {seed && (
         <div className="rounded-md border border-lime/25 bg-lime/5 p-3">
-          <p className="font-mono text-[0.625rem] uppercase tracking-widest text-lime">Seeded</p>
+          <p className="font-mono text-[0.625rem] uppercase tracking-widest text-lime-ink">Seeded</p>
           <p className="mt-1 text-[0.75rem] leading-relaxed text-muted-foreground">
             {totalRows} rows across {seed.tables.length} tables. Open the Query Arena → “My schema” to query it.
           </p>
@@ -197,7 +197,7 @@ function TableInspector({ tableId }: { tableId: string }) {
                     key={rel.id}
                     className="flex items-center gap-2 rounded-sm border border-border/70 px-2 py-1.5 text-[0.6875rem]"
                   >
-                    <Link2 className="h-3 w-3 shrink-0 text-cyan" />
+                    <Link2 className="h-3 w-3 shrink-0 text-cyan-ink" />
                     <span className="truncate font-mono">{otherTable?.name}</span>
                     <Badge variant={rel.kind === 'N:M' ? 'violet' : 'outline'} className="ml-auto">
                       {rel.kind}
@@ -260,8 +260,8 @@ function FlagChip({
       className={cn(
         'rounded-sm border px-1.5 py-0.5 font-mono text-[0.5625rem] uppercase tracking-wider transition-colors',
         active
-          ? 'border-primary/50 bg-primary/10 text-primary'
-          : 'border-border text-muted-foreground/70 hover:border-muted-foreground/50 hover:text-foreground',
+          ? 'border-primary/50 bg-primary/10 text-primary-ink'
+          : 'border-border text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground',
       )}
     >
       {label}
@@ -284,9 +284,9 @@ function ColumnRow({
     <div className="rounded-md border border-border bg-elevated/30 p-2">
       <div className="flex items-center gap-1.5">
         {column.primaryKey ? (
-          <KeyRound className="h-3 w-3 shrink-0 text-amber" />
+          <KeyRound className="h-3 w-3 shrink-0 text-mango-ink" />
         ) : isFk ? (
-          <Link2 className="h-3 w-3 shrink-0 text-cyan" />
+          <Link2 className="h-3 w-3 shrink-0 text-cyan-ink" />
         ) : (
           <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
         )}
@@ -321,7 +321,7 @@ function ColumnRow({
         <button
           type="button"
           onClick={onRemove}
-          className="shrink-0 rounded-sm p-1 text-muted-foreground/70 transition-colors hover:bg-destructive/10 hover:text-destructive"
+          className="shrink-0 rounded-sm p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
           aria-label={`Remove column ${column.name}`}
         >
           <Trash2 className="h-3 w-3" />
@@ -371,7 +371,7 @@ function ColumnRow({
         onChange={(e) => onChange({ defaultValue: e.target.value })}
         placeholder="default (optional) — e.g. CURRENT_TIMESTAMP"
         aria-label="Default value"
-        className="mt-1.5 h-5 w-full rounded-sm border border-transparent bg-transparent px-1 font-mono text-[0.5625rem] text-muted-foreground outline-none transition-colors placeholder:text-muted-foreground/40 focus:border-border focus:bg-background/60"
+        className="mt-1.5 h-5 w-full rounded-sm border border-transparent bg-transparent px-1 font-mono text-[0.5625rem] text-muted-foreground outline-none transition-colors placeholder:text-tertiary focus:border-border focus:bg-background/60"
       />
     </div>
   );
@@ -399,7 +399,7 @@ function RelationInspector({
           <button
             type="button"
             onClick={() => onSelectTable(rel.sourceTableId)}
-            className="rounded-sm border border-border px-1.5 py-0.5 transition-colors hover:border-primary/50 hover:text-primary"
+            className="rounded-sm border border-border px-1.5 py-0.5 transition-colors hover:border-primary/50 hover:text-primary-ink"
           >
             {source?.name}.{sourceCol?.name}
           </button>
@@ -407,7 +407,7 @@ function RelationInspector({
           <button
             type="button"
             onClick={() => onSelectTable(rel.targetTableId)}
-            className="rounded-sm border border-border px-1.5 py-0.5 transition-colors hover:border-primary/50 hover:text-primary"
+            className="rounded-sm border border-border px-1.5 py-0.5 transition-colors hover:border-primary/50 hover:text-primary-ink"
           >
             {target?.name}.{targetCol?.name}
           </button>
@@ -425,7 +425,7 @@ function RelationInspector({
               className={cn(
                 'rounded-sm border py-1.5 font-mono text-[0.6875rem] transition-colors',
                 rel.kind === kind
-                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  ? 'border-primary/50 bg-primary/10 text-primary-ink'
                   : 'border-border text-muted-foreground hover:text-foreground',
               )}
             >
@@ -435,13 +435,13 @@ function RelationInspector({
         </div>
         {rel.kind === 'N:M' && (
           <p className="mt-2 rounded-sm border border-violet/25 bg-violet/5 p-2 text-[0.6875rem] leading-relaxed text-muted-foreground">
-            <span className="text-violet">Pivot table generated:</span> a junction table with a composite key is
+            <span className="text-grape-ink">Pivot table generated:</span> a junction table with a composite key is
             added to the DDL and the seeder.
           </p>
         )}
         {rel.kind === '1:1' && (
           <p className="mt-2 rounded-sm border border-amber/25 bg-amber/5 p-2 text-[0.6875rem] leading-relaxed text-muted-foreground">
-            <span className="text-amber">Unique FK:</span> the foreign key column gets a UNIQUE constraint.
+            <span className="text-mango-ink">Unique FK:</span> the foreign key column gets a UNIQUE constraint.
           </p>
         )}
       </div>
@@ -481,7 +481,7 @@ function RelationInspector({
 
       <div className="rounded-sm border border-border/70 bg-elevated/30 p-2.5">
         <p className="flex items-center gap-1.5 font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground">
-          <TriangleAlert className="h-3 w-3 text-amber" />
+          <TriangleAlert className="h-3 w-3 text-mango-ink" />
           what happens on delete
         </p>
         <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted-foreground">

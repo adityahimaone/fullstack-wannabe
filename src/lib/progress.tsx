@@ -6,10 +6,10 @@ import { readStore, usePersistentState, writeStore } from '@/lib/storage';
 export type Stack = 'go' | 'node' | 'frontend' | 'php';
 
 export const STACKS: { id: Stack; label: string; short: string; accent: string }[] = [
-  { id: 'go', label: 'Go', short: 'GO', accent: 'text-cyan' },
-  { id: 'node', label: 'Node.js', short: 'TS', accent: 'text-lime' },
-  { id: 'frontend', label: 'Frontend TS', short: 'UI', accent: 'text-amber' },
-  { id: 'php', label: 'PHP', short: 'PHP', accent: 'text-violet' },
+  { id: 'go', label: 'Go', short: 'GO', accent: 'text-cyan-ink' },
+  { id: 'node', label: 'Node.js', short: 'TS', accent: 'text-lime-ink' },
+  { id: 'frontend', label: 'Frontend TS', short: 'UI', accent: 'text-mango-ink' },
+  { id: 'php', label: 'PHP', short: 'PHP', accent: 'text-grape-ink' },
 ];
 
 /**

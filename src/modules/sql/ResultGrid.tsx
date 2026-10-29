@@ -38,7 +38,7 @@ export function ResultGrid({
           <AlertTriangle className="h-3.5 w-3.5" />
           <p className="font-mono text-[0.625rem] uppercase tracking-widest">SQL error</p>
         </div>
-        <pre className="mt-2 whitespace-pre-wrap break-words font-mono text-[0.75rem] leading-relaxed text-foreground/85">
+        <pre className="mt-2 whitespace-pre-wrap break-words font-mono text-[0.75rem] leading-relaxed text-foreground">
           {error}
         </pre>
         <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted-foreground">
@@ -51,7 +51,7 @@ export function ResultGrid({
   if (!result) {
     return (
       <div className="flex h-full min-h-[180px] flex-col items-center justify-center gap-2 px-6 text-center">
-        <Terminal className="h-5 w-5 text-muted-foreground/50" />
+        <Terminal className="h-5 w-5 text-tertiary" />
         <p className="text-[0.8125rem] text-muted-foreground">
           Nothing executed yet. Hit <kbd className="rounded-sm border border-border px-1 font-mono text-[0.625rem]">⌘↵</kbd> to run.
         </p>
@@ -76,7 +76,7 @@ export function ResultGrid({
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-10 text-right text-[0.5625rem] text-muted-foreground/50">#</TableHead>
+              <TableHead className="w-10 text-right text-[0.5625rem] text-tertiary">#</TableHead>
               {result.columns.map((col) => (
                 <TableHead key={col}>{col}</TableHead>
               ))}
@@ -85,7 +85,7 @@ export function ResultGrid({
           <TableBody>
             {result.rows.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
-                <TableCell className="text-right text-[0.625rem] text-muted-foreground/40">
+                <TableCell className="text-right text-[0.625rem] text-tertiary">
                   {rowIndex + 1}
                 </TableCell>
                 {row.map((cell, cellIndex) => (
@@ -93,7 +93,7 @@ export function ResultGrid({
                     key={cellIndex}
                     className={cn(
                       numericColumns[cellIndex] && 'text-right tabular-nums',
-                      cell === null && 'text-muted-foreground/50',
+                      cell === null && 'text-tertiary',
                     )}
                   >
                     {cell === null ? (
@@ -124,7 +124,7 @@ export function ResultGrid({
           <Clock className="h-3 w-3" />
           {result.durationMs.toFixed(1)} ms
         </span>
-        {result.truncated && <span className="text-amber">display capped at 400 rows</span>}
+        {result.truncated && <span className="text-mango-ink">display capped at 400 rows</span>}
       </div>
     </div>
   );

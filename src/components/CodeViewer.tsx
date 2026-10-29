@@ -48,7 +48,7 @@ export function CodeViewer({
               className="inline-flex items-center gap-1 rounded-sm px-1.5 py-1 font-mono text-[0.625rem] uppercase tracking-wider text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
               aria-label="Copy code"
             >
-              {copied ? <Check className="h-3 w-3 text-lime" /> : <Copy className="h-3 w-3" />}
+              {copied ? <Check className="h-3 w-3 text-lime-ink" /> : <Copy className="h-3 w-3" />}
               {copied ? 'copied' : 'copy'}
             </button>
           </div>
@@ -58,7 +58,7 @@ export function CodeViewer({
         {showLineNumbers && (
           <div
             aria-hidden
-            className="sticky left-0 shrink-0 select-none border-r border-border/60 bg-surface/60 px-2 py-3 text-right font-mono text-[0.75rem] leading-[1.65] text-muted-foreground/35"
+            className="sticky left-0 shrink-0 select-none border-r border-border/60 bg-surface/60 px-2 py-3 text-right font-mono text-[0.75rem] leading-[1.65] text-tertiary"
           >
             {Array.from({ length: lineCount }, (_, i) => (
               <div key={i}>{i + 1}</div>

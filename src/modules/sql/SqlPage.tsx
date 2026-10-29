@@ -232,12 +232,12 @@ export function SqlPage() {
             <button
               type="button"
               onClick={() => setShowHint((v) => !v)}
-              className="inline-flex items-center gap-1 font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground transition-colors hover:text-amber"
+              className="inline-flex items-center gap-1 font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground transition-colors hover:text-mango-ink"
             >
               <Lightbulb className="h-3 w-3" />
               {showHint ? 'hide hint' : 'hint'}
             </button>
-            <span className="font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground/50">
+            <span className="font-mono text-[0.5625rem] uppercase tracking-widest text-tertiary">
               {quest.teaches.join(' · ')}
             </span>
           </div>
@@ -252,7 +252,7 @@ export function SqlPage() {
           <p className="font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground">
             free query · {datasetKey === 'my-schema' ? 'my schema' : getDataset(datasetKey)?.name}
           </p>
-          <span className="font-mono text-[0.5625rem] text-muted-foreground/50">
+          <span className="font-mono text-[0.5625rem] text-tertiary">
             ⌘↵ to run
           </span>
         </div>
@@ -305,7 +305,7 @@ export function SqlPage() {
           completions={completions}
         />
         <div className="mt-1.5 flex items-center gap-1.5">
-          <span className="hidden shrink-0 items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest text-muted-foreground/40 sm:inline-flex">
+          <span className="hidden shrink-0 items-center gap-1 font-mono text-[0.5rem] uppercase tracking-widest text-tertiary sm:inline-flex">
             <Table2 className="h-2.5 w-2.5" />
             tables
           </span>
@@ -345,7 +345,7 @@ export function SqlPage() {
         >
           <div className="flex items-start gap-2">
             {verdict.ok ? (
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-lime" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-lime-ink" />
             ) : (
               <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
             )}
@@ -360,7 +360,7 @@ export function SqlPage() {
                 <button
                   type="button"
                   onClick={() => setShowHint(true)}
-                  className="mt-1 font-mono text-[0.5625rem] uppercase tracking-widest text-amber hover:underline"
+                  className="mt-1 font-mono text-[0.5625rem] uppercase tracking-widest text-mango-ink hover:underline"
                 >
                   reveal hint
                 </button>
@@ -392,7 +392,11 @@ export function SqlPage() {
         )}
       </div>
       <TabsContent value="results" className="mt-0 min-h-0 flex-1">
-        <ResultGrid result={result} error={error} loading={loading} />
+        {result || error || loading ? (
+          <ResultGrid result={result} error={error} loading={loading} />
+        ) : (
+          <SqlIdle tables={tables} onPick={(t) => setSql(`SELECT *\nFROM ${t}\nLIMIT 20;`)} />
+        )}
       </TabsContent>
       <TabsContent value="explain" className="mt-0 min-h-0 flex-1 overflow-y-auto p-3">
         <QueryExplainer sql={sql} result={result} />
@@ -408,7 +412,7 @@ export function SqlPage() {
         eyebrow="02 · Query master arena"
         title={
           <>
-            Query <span className="text-muted-foreground/50">Arena</span>
+            Query <span className="text-tertiary">Arena</span>
           </>
         }
         description="Real SQLite in the browser. Five worlds of quests, each answer verified against the actual result set — not a string match."
@@ -494,6 +498,60 @@ export function SqlPage() {
           </TabsContent>
         </Tabs>
       )}
+    </div>
+  );
+}
+
+/**
+ * The idle state of the results panel.
+ *
+ * Before anything runs, this panel is the biggest rectangle on the page — so
+ * a lone "Nothing executed yet" in the middle of it read as a rendering bug
+ * rather than an invitation. Instead the void becomes the table inventory you
+ * were about to query: one click writes a starter SELECT into the editor.
+ */
+function SqlIdle({
+  tables,
+  onPick,
+}: {
+  tables: TableSchema[];
+  onPick: (table: string) => void;
+}) {
+  return (
+    <div className="flex h-full flex-col gap-3 p-3">
+      <div className="flex items-start gap-2">
+        <DatabaseIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-tertiary" />
+        <p className="text-[0.75rem] leading-relaxed text-muted-foreground">
+          Nothing executed yet. Pick a table below to write a starter query, or hit{' '}
+          <kbd className="rounded-sm border border-border px-1 font-mono text-[0.625rem] text-foreground">
+            ⌘↵
+          </kbd>{' '}
+          to run what you have.
+        </p>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <p className="mb-1.5 font-mono text-[0.5rem] uppercase tracking-widest text-tertiary">
+          {tables.length} {tables.length === 1 ? 'table' : 'tables'} in this database
+        </p>
+        <ul className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-3">
+          {tables.map((t) => (
+            <li key={t.name}>
+              <button
+                type="button"
+                onClick={() => onPick(t.name)}
+                className="group flex w-full items-center gap-2 rounded-[8px] border-[1.5px] border-border bg-elevated px-2.5 py-1.5 text-left transition-all hover:border-edge hover:shadow-hard-sm"
+              >
+                <Table2 className="h-3 w-3 shrink-0 text-cyan-ink" />
+                <span className="min-w-0 flex-1 truncate font-mono text-[0.6875rem]">{t.name}</span>
+                <span className="numeric shrink-0 font-mono text-[0.5625rem] text-tertiary">
+                  {t.rows}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

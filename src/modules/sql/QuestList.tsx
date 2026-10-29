@@ -40,7 +40,14 @@ export function QuestList({
             className={cn(
               'overflow-hidden rounded-md border transition-colors',
               isOpen ? 'border-border bg-elevated/30' : 'border-border/70',
-              !unlocked && 'opacity-70',
+              /*
+               * Not `opacity-70`. The header is still a live accordion — you
+               * can open a locked world and read how to unlock it — so it is an
+               * active control and has to clear 4.5:1. Fading the card put the
+               * world number at 3.49:1. A dashed edge says "provisional"
+               * without touching the ink.
+               */
+              !unlocked && 'border-dashed',
             )}
           >
             <button
@@ -53,7 +60,7 @@ export function QuestList({
                 className={cn(
                   'numeric grid h-5 w-5 shrink-0 place-items-center rounded-sm border font-mono text-[0.5625rem]',
                   done === quests.length
-                    ? 'border-primary/50 bg-primary/15 text-primary'
+                    ? 'border-primary/50 bg-primary/15 text-primary-ink'
                     : 'border-border text-muted-foreground',
                 )}
               >
@@ -114,11 +121,11 @@ export function QuestList({
                           </span>
                           <span className="min-w-0 flex-1 truncate text-[0.75rem]">{quest.title}</span>
                           {quest.dataset !== datasetKey && (
-                            <span className="shrink-0 font-mono text-[0.5rem] uppercase tracking-wider text-muted-foreground/50">
+                            <span className="shrink-0 font-mono text-[0.5rem] uppercase tracking-wider text-tertiary">
                               {quest.dataset.slice(0, 4)}
                             </span>
                           )}
-                          <span className="numeric shrink-0 font-mono text-[0.5625rem] text-muted-foreground/70">
+                          <span className="numeric shrink-0 font-mono text-[0.5625rem] text-muted-foreground">
                             {quest.xp}
                           </span>
                         </button>
@@ -135,7 +142,7 @@ export function QuestList({
       <div className="rounded-md border border-border/70 bg-elevated/20 p-2.5">
         <div className="flex items-center justify-between font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground">
           <span className="inline-flex items-center gap-1">
-            <Trophy className="h-3 w-3 text-amber" />
+            <Trophy className="h-3 w-3 text-mango-ink" />
             arena progress
           </span>
           <span className="numeric">

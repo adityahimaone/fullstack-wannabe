@@ -57,9 +57,9 @@ function iconFor(node: TreeNode, open: boolean) {
     return <Icon className="h-3.5 w-3.5 text-muted-foreground" />;
   }
   if (node.name.endsWith('.json') || node.name.endsWith('.prisma')) {
-    return <FileJson className="h-3.5 w-3.5 text-amber" />;
+    return <FileJson className="h-3.5 w-3.5 text-mango-ink" />;
   }
-  if (node.name.endsWith('.sql')) return <Database className="h-3.5 w-3.5 text-cyan" />;
+  if (node.name.endsWith('.sql')) return <Database className="h-3.5 w-3.5 text-cyan-ink" />;
   if (node.name.endsWith('.md')) return <FileText className="h-3.5 w-3.5 text-muted-foreground" />;
   return <FileCode2 className="h-3.5 w-3.5 text-muted-foreground" />;
 }
@@ -120,15 +120,19 @@ export function FolderTree({
               'group flex w-full items-center gap-1.5 rounded-sm py-[3px] pr-1.5 text-left transition-colors',
               isActive
                 ? 'bg-primary/12 text-foreground'
-                : 'text-muted-foreground hover:bg-elevated hover:text-foreground',
-              dimmed && 'opacity-40',
+                : cn(
+                    'hover:bg-elevated hover:text-foreground',
+                    // `opacity-40` on a whole row is 1.8:1 — the file name stops
+                    // being text and becomes texture. Step down the ramp instead.
+                    dimmed ? 'text-tertiary' : 'text-muted-foreground',
+                  ),
               traced && 'bg-amber/15 text-foreground ring-1 ring-inset ring-amber/40',
             )}
             style={{ paddingLeft: 6 + depth * 12 }}
           >
             {node.dir ? (
               <ChevronRight
-                className={cn('h-3 w-3 shrink-0 text-muted-foreground/60 transition-transform', isOpen && 'rotate-90')}
+                className={cn('h-3 w-3 shrink-0 text-tertiary transition-transform', isOpen && 'rotate-90')}
               />
             ) : (
               <span className="w-3 shrink-0" />
@@ -140,8 +144,8 @@ export function FolderTree({
                 className={cn(
                   'numeric shrink-0 rounded-sm border px-1 font-mono text-[0.5rem] leading-4',
                   isActive || traced
-                    ? 'border-primary/40 text-primary'
-                    : 'border-border/70 text-muted-foreground/70',
+                    ? 'border-primary/40 text-primary-ink'
+                    : 'border-border/70 text-muted-foreground',
                 )}
               >
                 {node.step}

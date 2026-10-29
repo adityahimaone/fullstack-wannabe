@@ -71,7 +71,7 @@ export function BlueprintPage() {
               className={cn(
                 'flex-1 rounded-sm border px-1 py-1.5 font-mono text-[0.625rem] uppercase tracking-wider transition-colors',
                 stack === s.id
-                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  ? 'border-primary/50 bg-primary/10 text-primary-ink'
                   : 'border-border text-muted-foreground hover:text-foreground',
               )}
             >
@@ -79,11 +79,11 @@ export function BlueprintPage() {
             </button>
           ))}
         </div>
-        <p className="font-mono text-[0.5rem] leading-relaxed text-muted-foreground/60">
+        <p className="font-mono text-[0.5rem] leading-relaxed text-tertiary">
           {files.length} files · {doneSteps.length}/6 layers visited
         </p>
         {requestedStack === 'frontend' && (
-          <p className="rounded-sm border border-amber/25 bg-amber/5 px-1.5 py-1 font-mono text-[0.5rem] leading-relaxed text-amber/90">
+          <p className="rounded-sm border border-amber/25 bg-amber/5 px-1.5 py-1 font-mono text-[0.5rem] leading-relaxed text-mango-ink/90">
             Frontend TS is Dojo-only. The blueprint generates the server that feeds it — showing Node.js.
           </p>
         )}
@@ -106,7 +106,7 @@ export function BlueprintPage() {
         eyebrow="04 · Backend blueprint"
         title={
           <>
-            API <span className="text-muted-foreground/50">Blueprint</span>
+            API <span className="text-tertiary">Blueprint</span>
           </>
         }
         description="Six layers, three stacks, one request path. Click any file to see why it lives in that folder — the code is generated from your own schema."
@@ -178,7 +178,7 @@ export function BlueprintPage() {
                     <span
                       className={cn(
                         'shrink-0 font-mono text-[0.625rem]',
-                        i === arr.length - 1 ? 'text-foreground' : 'text-muted-foreground/60',
+                        i === arr.length - 1 ? 'text-foreground' : 'text-tertiary',
                       )}
                     >
                       {part}
@@ -192,7 +192,7 @@ export function BlueprintPage() {
               </div>
 
               <div className="flex items-start gap-2 rounded-sm border border-border/70 bg-elevated/30 px-2.5 py-2">
-                <Info className="mt-0.5 h-3 w-3 shrink-0 text-cyan" />
+                <Info className="mt-0.5 h-3 w-3 shrink-0 text-cyan-ink" />
                 <p className="min-w-0 flex-1 text-[0.6875rem] leading-relaxed text-muted-foreground">
                   {selected.note}
                 </p>
@@ -223,7 +223,7 @@ export function BlueprintPage() {
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface/60 px-3 py-2">
-        <PanelLeft className="h-3.5 w-3.5 text-violet" />
+        <PanelLeft className="h-3.5 w-3.5 text-grape-ink" />
         <p className="text-[0.6875rem] leading-relaxed text-muted-foreground">
           The tree is generated from your ERD table <span className="font-mono text-foreground">{ctx.table}</span> —
           change a column in the Schema Studio and every snippet here updates.

@@ -181,9 +181,19 @@ try {
   await evaluate(`localStorage.clear(); return true;`);
   await goto('/', 1400);
   const dash = await evaluate(`
-    return { h1: document.querySelector('h1')?.textContent?.trim() ?? '', panels: document.querySelectorAll('.panel').length };
+    return {
+      h1: document.querySelector('h1')?.textContent?.trim() ?? '',
+      panels: document.querySelectorAll('.panel').length,
+      // The hero is a .stage, not a .panel — the brand's night ground.
+      stages: document.querySelectorAll('.stage').length,
+      mark: !!document.querySelector('a[aria-label*="home"] svg'),
+    };
   `);
-  check('App boots and dashboard renders', dash.h1.length > 0 && dash.panels > 3, `h1="${dash.h1}" · ${dash.panels} panels`);
+  check(
+    'App boots and dashboard renders',
+    dash.h1.length > 0 && dash.panels >= 3 && dash.stages === 1 && dash.mark,
+    `h1="${dash.h1}" · ${dash.panels} panels · ${dash.stages} stage · mark ${dash.mark ? 'yes' : 'no'}`,
+  );
 
   // ---- 2. ERD canvas
   await goto('/erd', 1600);
@@ -375,7 +385,7 @@ try {
   check('Quest log renders all five worlds', quest.worlds === 5, `${quest.worlds}/5 worlds · ${quest.total}/27 cleared`);
 
   // ---- 13. No horizontal overflow across routes × breakpoints
-  const routes = ['/', '/erd', '/sql', '/dojo', '/blueprint'];
+  const routes = ['/', '/erd', '/sql', '/dojo', '/blueprint', '/design-system'];
   const sizes = [[375, 780], [768, 900], [1024, 800], [1440, 900]];
   const overflow = [];
   for (const [w, h] of sizes) {
@@ -388,7 +398,11 @@ try {
       if (res.scrollW > res.innerW + 1) overflow.push(`${route}@${w}: ${res.scrollW}>${res.innerW}`);
     }
   }
-  check('No horizontal overflow across 20 route × breakpoint combos', overflow.length === 0, overflow.join(' | '));
+  check(
+    `No horizontal overflow across ${routes.length * sizes.length} route × breakpoint combos`,
+    overflow.length === 0,
+    overflow.join(' | '),
+  );
 
   // ---- console hygiene
   const noisy = consoleErrors.filter((e) => e && !/favicon|Download the React DevTools/i.test(e));

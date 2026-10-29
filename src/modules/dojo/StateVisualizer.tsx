@@ -18,7 +18,7 @@ export function StateVisualizer({
   if (value === undefined || value === null) {
     return (
       <div className={cn('flex flex-col items-center justify-center gap-2 p-6 text-center', className)}>
-        <Boxes className="h-5 w-5 text-muted-foreground/40" />
+        <Boxes className="h-5 w-5 text-tertiary" />
         <p className="text-[0.75rem] leading-relaxed text-muted-foreground">
           Run your solution and the resulting data structure renders here — keys, buckets and magnitudes.
         </p>
@@ -39,7 +39,7 @@ export function StateVisualizer({
           {isNumberMap ? <Hash className="h-2.5 w-2.5" /> : isObjectArray ? <ListTree className="h-2.5 w-2.5" /> : <Braces className="h-2.5 w-2.5" />}
           {isNumberMap ? 'object' : Array.isArray(value) ? 'array' : typeof value}
         </span>
-        <span className="font-mono text-[0.5625rem] text-muted-foreground/60">
+        <span className="font-mono text-[0.5625rem] text-tertiary">
           {isNumberMap && `${Object.keys(value).length} buckets`}
           {Array.isArray(value) && `${value.length} items`}
           {sourceRows !== undefined && ` · ${sourceRows} source rows`}
@@ -75,12 +75,12 @@ function NumberBuckets({ map }: { map: Record<string, number> }) {
           <span className="w-16 shrink-0 truncate font-mono text-[0.625rem] text-muted-foreground">
             {key}
           </span>
-          <div className="h-4 flex-1 overflow-hidden rounded-sm bg-muted/50">
+          <div className="h-4 flex-1 overflow-hidden rounded-[4px] border-[1.5px] border-border bg-muted">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${Math.max(3, (Math.abs(value) / max) * 100)}%` }}
               transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full rounded-sm bg-gradient-to-r from-primary/60 to-primary"
+              className="h-full bg-primary"
             />
           </div>
           <span className="numeric w-16 shrink-0 text-right font-mono text-[0.625rem] text-foreground">

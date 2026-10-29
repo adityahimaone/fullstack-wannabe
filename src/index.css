@@ -1,40 +1,29 @@
+/* ─────────────────────────────────────────────────────────────────────
+   fullstack wannabe · stylesheet
+   Brand tokens first (generated), then the material built on top of them.
+
+   The material, in one sentence: every object is a sticker — one flat
+   fill, one 2.5px ink edge, one 4px hard offset with zero blur.
+   No gradients. No glows. No blurred shadows. Anywhere.
+   ───────────────────────────────────────────────────────────────────── */
+
+@import './styles/wannabe-tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   /*
-   * Each token is stored twice:
-   *   --x-c  → raw oklch channels, consumed by Tailwind so `/opacity` works
-   *   --x    → the composed colour, for direct use in gradients and SVG
+   * Tokens arrive in two layers from wannabe-tokens.css:
+   *   --x-c  → raw oklch channels, so Tailwind's `/opacity` works
+   *   --x    → the composed colour, for SVG, gradients-free fills, shadows
+   *
+   * This block only composes the second layer from the first. Because the
+   * .dark class lands on <html> — which IS :root — the channels flip and
+   * these composed values follow with no duplicated declarations.
    */
   :root {
-    --background-c: 0.975 0.006 95;
-    --foreground-c: 0.22 0.02 265;
-    --surface-c: 0.995 0.002 95;
-    --elevated-c: 1 0 0;
-    --card-c: 0.995 0.002 95;
-    --card-foreground-c: 0.22 0.02 265;
-    --popover-c: 1 0 0;
-    --popover-foreground-c: 0.22 0.02 265;
-    --primary-c: 0.52 0.15 145;
-    --primary-foreground-c: 0.99 0.01 95;
-    --secondary-c: 0.94 0.006 95;
-    --secondary-foreground-c: 0.26 0.02 265;
-    --muted-c: 0.945 0.006 95;
-    --muted-foreground-c: 0.47 0.015 265;
-    --accent-c: 0.93 0.02 130;
-    --accent-foreground-c: 0.28 0.04 145;
-    --destructive-c: 0.55 0.19 25;
-    --destructive-foreground-c: 0.99 0.01 95;
-    --border-c: 0.88 0.008 95;
-    --input-c: 0.9 0.008 95;
-    --ring-c: 0.52 0.15 145;
-    --lime-c: 0.52 0.15 145;
-    --amber-c: 0.55 0.15 62;
-    --violet-c: 0.5 0.16 300;
-    --cyan-c: 0.5 0.11 220;
-
     --background: oklch(var(--background-c));
     --foreground: oklch(var(--foreground-c));
     --surface: oklch(var(--surface-c));
@@ -56,43 +45,40 @@
     --border: oklch(var(--border-c));
     --input: oklch(var(--input-c));
     --ring: oklch(var(--ring-c));
+
+    /* text ON a fill — fixed, never theme-flipping (see DESIGN.md §2) */
+    --on-candy: oklch(var(--on-candy-c));
+    --on-grape: oklch(var(--on-grape-c));
+    --on-danger: oklch(var(--on-danger-c));
+    --on-stage: oklch(var(--on-stage-c));
+    --text-tertiary: oklch(var(--text-tertiary-c));
+    --danger-ink: oklch(var(--danger-ink-c));
+
+    /* the candy, as fills */
     --lime: oklch(var(--lime-c));
     --amber: oklch(var(--amber-c));
     --violet: oklch(var(--violet-c));
     --cyan: oklch(var(--cyan-c));
+    --pink: oklch(var(--world-arena-c));
+    --mango: oklch(var(--reward-c));
+    --mint: oklch(var(--success-c));
+    --chili: var(--destructive);
+    --grape: var(--violet);
 
-    --grid-line: oklch(0.22 0.02 265 / 0.055);
-    --radius: 0.55rem;
-  }
+    /* the candy, as TEXT (darkened in light mode, bright in dark) */
+    --lime-ink: oklch(var(--primary-ink-c));
+    --mango-ink: oklch(var(--reward-ink-c));
+    --cyan-ink: oklch(var(--info-ink-c));
+    --mint-ink: oklch(var(--success-ink-c));
+    --grape-ink: oklch(var(--violet-ink-c));
 
-  .dark {
-    --background-c: 0.152 0.012 265;
-    --foreground-c: 0.95 0.008 95;
-    --surface-c: 0.176 0.013 265;
-    --elevated-c: 0.207 0.014 265;
-    --card-c: 0.176 0.013 265;
-    --card-foreground-c: 0.95 0.008 95;
-    --popover-c: 0.196 0.014 265;
-    --popover-foreground-c: 0.95 0.008 95;
-    --primary-c: 0.875 0.19 122;
-    --primary-foreground-c: 0.22 0.045 130;
-    --secondary-c: 0.235 0.014 265;
-    --secondary-foreground-c: 0.93 0.008 95;
-    --muted-c: 0.228 0.014 265;
-    --muted-foreground-c: 0.69 0.014 265;
-    --accent-c: 0.27 0.03 130;
-    --accent-foreground-c: 0.93 0.06 122;
-    --destructive-c: 0.65 0.2 22;
-    --destructive-foreground-c: 0.98 0.01 95;
-    --border-c: 0.3 0.015 265;
-    --input-c: 0.33 0.016 265;
-    --ring-c: 0.875 0.19 122;
-    --lime-c: 0.875 0.19 122;
-    --amber-c: 0.79 0.14 72;
-    --violet-c: 0.72 0.13 300;
-    --cyan-c: 0.79 0.1 210;
+    /* the material */
+    --edge: oklch(var(--edge-c));
+    --offset: oklch(var(--offset-c));
+    --stage: oklch(var(--stage-c));
 
-    --grid-line: oklch(0.95 0.008 95 / 0.05);
+    --grid-line: oklch(var(--foreground-c) / 0.07);
+    --radius: 18px;
   }
 
   * {
@@ -101,6 +87,7 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -108,52 +95,217 @@
     font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: 'ss01' on, 'cv01' on;
     overflow-x: hidden;
+    text-wrap: pretty;
+  }
+
+  /* Headings default to the display face; the brand is loud, not shouty. */
+  h1,
+  h2,
+  h3 {
+    font-family: 'Bricolage Grotesque', 'Instrument Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    text-wrap: balance;
   }
 
   ::selection {
     background: var(--lime);
-    color: var(--primary-foreground);
+    color: var(--on-candy);
   }
 
   :focus-visible {
-    outline: 2px solid var(--ring);
+    outline: var(--edge-w) solid var(--ring);
     outline-offset: 2px;
   }
 
+  ::placeholder {
+    color: oklch(var(--muted-foreground-c) / 0.75);
+  }
+
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 11px;
+    height: 11px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: color-mix(in oklch, var(--border) 88%, transparent);
+    background: color-mix(in oklch, var(--border) 90%, transparent);
     border-radius: 999px;
     border: 3px solid transparent;
     background-clip: content-box;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in oklch, var(--muted-foreground) 55%, transparent);
+    background: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
     background-clip: content-box;
   }
 }
 
 @layer components {
-  /* ---- Surfaces ------------------------------------------------------- */
+  /* ══ The material ═════════════════════════════════════════════════════
+     Three composable classes. Everything else is these three plus a fill.
+       .edge   the 2.5px ink cut
+       .lift   the 4px hard offset (0 blur)
+       .press  the button travels into its own shadow
+     ═════════════════════════════════════════════════════════════════════ */
+
+  .edge {
+    border: var(--edge-w) solid var(--edge);
+  }
+
+  .edge-thin {
+    border: 1.5px solid var(--edge);
+  }
+
+  .lift {
+    box-shadow: var(--shift) var(--shift) 0 0 var(--offset);
+  }
+
+  .lift-sm {
+    box-shadow: 2px 2px 0 0 var(--offset);
+  }
+
+  .lift-lg {
+    box-shadow: 6px 6px 0 0 var(--offset);
+  }
+
+  /*
+   * `.press` owns its shadow outright rather than composing with `.lift`.
+   * Reason: `@tailwind utilities` is emitted after `@tailwind components`,
+   * so a `shadow-hard` utility would beat `.press:hover` no matter how
+   * specific the hover selector is. One class, one shadow, no argument.
+   * Depth is set with `--_lift`; `.press-sm` is the quiet 2px version.
+   */
+  .press {
+    --_lift: var(--shift);
+    box-shadow: var(--_lift) var(--_lift) 0 0 var(--offset);
+    transition:
+      transform var(--wb-t-press) var(--ease-pop),
+      box-shadow var(--wb-t-press) var(--ease-pop);
+    will-change: transform;
+  }
+  .press-sm {
+    --_lift: 2px;
+  }
+  .press:hover:not(:disabled):not([aria-disabled='true']) {
+    transform: translate(-1px, -1px);
+    box-shadow: calc(var(--_lift) + 2px) calc(var(--_lift) + 2px) 0 0 var(--offset);
+  }
+  .press:active:not(:disabled):not([aria-disabled='true']) {
+    transform: translate(var(--_lift), var(--_lift));
+    box-shadow: 0 0 0 0 var(--offset);
+    transition-duration: 60ms;
+  }
+  .press:disabled,
+  .press[aria-disabled='true'] {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ══ Surfaces ════════════════════════════════════════════════════════ */
+
   .panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--card);
+    border: var(--edge-w) solid var(--edge);
     border-radius: var(--radius);
+    box-shadow: var(--shift) var(--shift) 0 0 var(--offset);
     position: relative;
   }
 
+  /* For full-bleed containers where an offset would read as a layout bug. */
   .panel-flat {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--card);
+    border: var(--edge-w) solid var(--edge);
+    border-radius: var(--radius);
   }
 
-  /* Blueprint canvas texture */
+  /* Hairline container — for dense tables and long lists, where 2.5px
+     edges at every row become a cage. */
+  .panel-quiet {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  /* The night stage: heroes, completion screens, the dojo runner. */
+  .stage {
+    background: var(--stage);
+    color: oklch(var(--wb-on-stage-c));
+    border: var(--edge-w) solid var(--edge);
+    border-radius: 26px;
+  }
+
+  /*
+   * On the stage, everything is paper-on-night. These four classes exist
+   * because Tailwind arbitrary values like border-[oklch(var(--x)/0.2)] get
+   * parsed as opacity modifiers and silently produce nothing — and because
+   * the stage is dark in BOTH themes, so a theme-flipping token would be wrong.
+   */
+  .on-stage {
+    color: oklch(var(--wb-on-stage-c));
+  }
+  .on-stage-2 {
+    color: oklch(var(--wb-on-stage-c) / 0.72);
+  }
+  .on-stage-3 {
+    color: oklch(var(--wb-on-stage-c) / 0.58);
+  }
+  .stage-line {
+    border-color: oklch(var(--wb-on-stage-c) / 0.22);
+  }
+  .stage-line-strong {
+    border-color: oklch(var(--wb-on-stage-c) / 0.34);
+  }
+  .stage-fill {
+    background: oklch(var(--wb-on-stage-c) / 0.07);
+  }
+  .stage-fill-2 {
+    background: oklch(var(--wb-on-stage-c) / 0.14);
+  }
+
+  /* A meter on the stage: paper-coloured notches instead of ink ones. */
+  .meter-on-stage > span {
+    border-color: oklch(var(--wb-on-stage-c) / 0.42);
+    background: oklch(var(--wb-on-stage-c) / 0.13);
+  }
+
+  .sticker {
+    background: var(--elevated);
+    border: var(--edge-w) solid var(--edge);
+    border-radius: 12px;
+    box-shadow: var(--shift) var(--shift) 0 0 var(--offset);
+    transform: rotate(-1.5deg);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.125rem 0.5rem;
+    border: 1.5px solid var(--edge);
+    border-radius: 999px;
+    background: var(--elevated);
+    color: var(--foreground);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /*
+   * A chip that lives on a coloured strip, drawn in the strip's own text
+   * colour. `border-current/45` does not exist — Tailwind 3 has no alpha
+   * channel for `currentColor` and silently emits nothing, so the chip loses
+   * its edge entirely. color-mix does the job without a second token.
+   */
+  .chip-on {
+    border-color: color-mix(in oklab, currentColor 45%, transparent);
+  }
+
+  /* ══ Canvas textures ═════════════════════════════════════════════════ */
+
   .grid-canvas {
     background-color: var(--background);
     background-image:
@@ -163,31 +315,59 @@
   }
 
   .grid-canvas-sm {
-    background-image:
-      radial-gradient(var(--grid-line) 1px, transparent 1px);
+    background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
     background-size: 18px 18px;
   }
 
   .dot-field {
-    background-image: radial-gradient(var(--grid-line) 1.1px, transparent 1.1px);
+    background-image: radial-gradient(var(--grid-line) 1.1px, transparent 1px);
     background-size: 16px 16px;
   }
 
-  /* Micro label — uppercase mono, wide tracking */
+  /* Decoration only — never behind the editor, the ERD canvas or a table. */
+  .halftone {
+    background-image: radial-gradient(var(--edge) 1.4px, transparent 1.4px);
+    background-size: 11px 11px;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .tape {
+    width: 68px;
+    height: 20px;
+    background: color-mix(in oklch, var(--mango) 62%, transparent);
+    border: 1.5px solid var(--edge);
+    transform: rotate(-3deg);
+    pointer-events: none;
+  }
+
+  /* ══ Type ════════════════════════════════════════════════════════════ */
+
   .eyebrow {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.6875rem;
-    line-height: 1;
-    letter-spacing: 0.16em;
+    line-height: 1.4;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* A long eyebrow stops shouting: caps only up to three words (DESIGN §5). */
+  .eyebrow-lower {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
     color: var(--muted-foreground);
   }
 
   .display {
     font-family: 'Bricolage Grotesque', 'Instrument Sans', sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.028em;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
     font-optical-sizing: auto;
+    text-wrap: balance;
   }
 
   .numeric {
@@ -196,36 +376,9 @@
     letter-spacing: -0.02em;
   }
 
-  /* Corner ticks for key panels */
-  .corner-ticks::before,
-  .corner-ticks::after {
-    content: '';
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    border-color: color-mix(in oklch, var(--lime) 60%, transparent);
-    pointer-events: none;
-  }
-  .corner-ticks::before {
-    top: -1px;
-    left: -1px;
-    border-top: 1.5px solid;
-    border-left: 1.5px solid;
-  }
-  .corner-ticks::after {
-    bottom: -1px;
-    right: -1px;
-    border-bottom: 1.5px solid;
-    border-right: 1.5px solid;
-  }
-
   .hairline {
-    height: 1px;
-    background: linear-gradient(
-      to right,
-      var(--border),
-      color-mix(in oklch, var(--border) 25%, transparent)
-    );
+    height: 1.5px;
+    background: var(--border);
   }
 
   .link-underline {
@@ -235,16 +388,100 @@
     content: '';
     position: absolute;
     left: 0;
-    bottom: -2px;
-    height: 1px;
+    bottom: -3px;
+    height: 2px;
     width: 100%;
+    border-radius: 2px;
     background: currentColor;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.28s var(--ease-pop);
   }
   .link-underline:hover::after {
     transform: scaleX(1);
+  }
+
+  /* Hand-drawn underline for one word in a hero. Mango, fixed in both themes. */
+  .squiggle {
+    padding-bottom: 0.42em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.2q5-4.6 10 0t10 0t10 0t9 0' fill='none' stroke='%23FFB020' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: 0 100%;
+    background-size: 40px 8px;
+  }
+
+  /* ══ ERD node — the mark, at table scale ═════════════════════════════ */
+
+  .node-card {
+    background: var(--card);
+    border: var(--edge-w) solid var(--edge);
+    border-radius: 14px;
+    box-shadow: var(--shift) var(--shift) 0 0 var(--offset);
+    overflow: hidden;
+    transition:
+      transform var(--wb-t-press) var(--ease-pop),
+      box-shadow var(--wb-t-press) var(--ease-pop);
+  }
+  .node-card.is-selected {
+    box-shadow: 6px 6px 0 0 var(--grape);
+    transform: translate(-2px, -2px);
+  }
+
+  .node-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--node-accent, var(--cyan));
+    color: var(--node-on, var(--on-candy));
+    border-bottom: var(--edge-w) solid var(--edge);
+    font-family: 'Bricolage Grotesque', 'Instrument Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* ══ Meter — 8 segments, not a smooth bar ════════════════════════════ */
+
+  .meter {
+    display: flex;
+    gap: 3px;
+    align-items: stretch;
+  }
+  .meter > span {
+    flex: 1 1 0;
+    min-width: 4px;
+    height: 9px;
+    border: 1.5px solid var(--edge);
+    border-radius: 3px;
+    background: transparent;
+    transition: background var(--wb-t-pop) var(--ease-pop);
+  }
+  .meter > span[data-on='true'] {
+    background: var(--meter-fill, var(--lime));
+  }
+
+  /* ══ Decorative corner ticks ═════════════════════════════════════════ */
+
+  .corner-ticks::before,
+  .corner-ticks::after {
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-color: color-mix(in oklch, var(--grape) 70%, transparent);
+    pointer-events: none;
+  }
+  .corner-ticks::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+  }
+  .corner-ticks::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
   }
 }
 
@@ -265,14 +502,49 @@
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
+
+  /* Text-safe candy. Use these for words; use the plain colour for fills. */
+  .text-lime-ink {
+    color: var(--lime-ink);
+  }
+  .text-mango-ink {
+    color: var(--mango-ink);
+  }
+  .text-cyan-ink {
+    color: var(--cyan-ink);
+  }
+  .text-mint-ink {
+    color: var(--mint-ink);
+  }
+  .text-grape-ink {
+    color: var(--grape-ink);
+  }
+
+  .text-on-candy {
+    color: var(--on-candy);
+  }
+  .text-on-grape {
+    color: var(--on-grape);
+  }
+
+  /* No blur anywhere in this system — this class exists to undo an old one. */
+  .no-glow {
+    box-shadow: none !important;
+    filter: none !important;
+  }
 }
 
-/* ---- Prism syntax theme ------------------------------------------------ */
+/* ══ Prism syntax theme ══════════════════════════════════════════════════
+   Four accents, no more: grape keywords, mint strings, cyan numbers,
+   mango functions. Every one of them is the *ink* variant, so it reads
+   on cream paper as well as on the dark stage.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 code[class*='language-'],
 pre[class*='language-'] {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 0.8125rem;
-  line-height: 1.65;
+  line-height: 1.7;
   tab-size: 2;
   color: var(--foreground);
   background: none;
@@ -281,7 +553,7 @@ pre[class*='language-'] {
 .token.comment,
 .token.prolog,
 .token.cdata {
-  color: color-mix(in oklch, var(--muted-foreground) 95%, transparent);
+  color: var(--muted-foreground);
   font-style: italic;
 }
 .token.punctuation {
@@ -289,24 +561,26 @@ pre[class*='language-'] {
 }
 .token.keyword,
 .token.boolean,
-.token.important {
-  color: var(--lime);
+.token.important,
+.token.selector {
+  color: var(--grape-ink);
+  font-weight: 600;
 }
 .token.string,
 .token.char,
 .token.attr-value,
 .token.regex {
-  color: var(--amber);
+  color: var(--mint-ink);
 }
 .token.number,
 .token.constant,
 .token.symbol {
-  color: var(--violet);
+  color: var(--cyan-ink);
 }
 .token.function,
 .token.class-name,
 .token.builtin {
-  color: var(--cyan);
+  color: var(--mango-ink);
 }
 .token.operator,
 .token.entity,
@@ -317,45 +591,107 @@ pre[class*='language-'] {
 .token.attr-name,
 .token.property,
 .token.tag {
-  color: color-mix(in oklch, var(--cyan) 85%, var(--foreground));
+  color: var(--cyan-ink);
 }
 
-/* React Flow overrides */
+/* ══ React Flow ═════════════════════════════════════════════════════════ */
+
 .react-flow__attribution {
   display: none;
 }
+
 .react-flow__handle {
-  width: 9px;
-  height: 9px;
-  background: var(--surface);
-  border: 1.5px solid var(--lime);
+  width: 10px;
+  height: 10px;
+  background: var(--elevated);
+  border: 1.5px solid var(--edge);
   border-radius: 999px;
 }
 .react-flow__handle:hover {
   background: var(--lime);
 }
+
 .react-flow__edge-path {
-  stroke: color-mix(in oklch, var(--muted-foreground) 70%, transparent);
-  stroke-width: 1.6;
+  stroke: color-mix(in oklch, var(--foreground) 38%, transparent);
+  stroke-width: 2;
 }
 .react-flow__edge.selected .react-flow__edge-path {
-  stroke: var(--lime);
-  stroke-width: 2.2;
+  stroke: var(--grape);
+  stroke-width: 2.6;
+}
+
+.react-flow__controls {
+  border: var(--edge-w) solid var(--edge);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 0 var(--offset);
 }
 .react-flow__controls-button {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--elevated);
+  border-bottom: 1.5px solid var(--edge);
   fill: var(--foreground);
 }
 .react-flow__controls-button:hover {
-  background: var(--elevated);
+  background: var(--muted);
 }
-.react-flow__minimap {
-  background: var(--surface) !important;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+.react-flow__controls-button:last-child {
+  border-bottom: 0;
 }
 
+.react-flow__minimap {
+  background: var(--elevated) !important;
+  border: var(--edge-w) solid var(--edge);
+  border-radius: 12px;
+}
+
+.react-flow__background {
+  color: var(--grid-line);
+}
+
+/* ══ Motion ═════════════════════════════════════════════════════════════ */
+
+@keyframes wb-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes wb-wiggle {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes wb-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-pop-in {
+  animation: wb-pop-in var(--wb-t-pop) var(--ease-pop) both;
+}
+.animate-wiggle {
+  animation: wb-wiggle 900ms var(--ease-pop) infinite;
+}
+.animate-bob {
+  animation: wb-bob 2.4s ease-in-out infinite;
+}
+
+/* A loop that never runs while the user is reading code (DESIGN §6). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

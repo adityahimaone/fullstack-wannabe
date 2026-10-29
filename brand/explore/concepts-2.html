@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wannabe — mark exploration 02</title>
+<style>
+  :root{
+    --ink:#1b1626; --paper:#fff6e5; --card:#fffdf7;
+    --pink:#ff4d8d; --grape:#7b5cff; --cyan:#2ed3f0; --lime:#c6f24e; --mango:#ffb020;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,system-ui,sans-serif;padding:34px 40px 40px}
+  h1{font-size:20px;letter-spacing:-.02em}
+  p.sub{font-size:12px;opacity:.6;margin-top:6px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:24px}
+  .cell{background:var(--card);border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:16px;display:flex;gap:16px}
+  .sizes{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none}
+  .big{width:120px;height:120px}
+  .mid{width:48px;height:48px}
+  .small{width:32px;height:32px}
+  .tiny{width:16px;height:16px}
+  .meta{font-size:11.5px;line-height:1.5;opacity:.75}
+  .meta b{display:block;font-size:13.5px;opacity:1;margin-bottom:4px}
+  .tag{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.45;margin-top:8px}
+</style>
+</head>
+<body>
+<h1>Round two: the table has to read as a table.</h1>
+<p class="sub">Wider node, thinner header, dog-ear moved off the roof line. The face is the only charm left, so it has to carry 16px alone.</p>
+
+<div class="grid">
+
+  <!-- A2 · wide node, ticks -->
+  <div class="cell">
+    <div class="sizes">
+      <svg class="big" viewBox="0 0 64 64">
+        <path d="M15 13 H49 A11 11 0 0 1 60 24 V46 L51 55 H15 A11 11 0 0 1 4 44 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M15 13 H49 A11 11 0 0 1 60 24 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <rect x="44" y="17" width="3" height="5" rx="1.5" fill="#1b1626"/>
+        <rect x="49" y="17" width="3" height="5" rx="1.5" fill="#1b1626"/>
+        <rect x="22.5" y="34" width="5.5" height="8.5" rx="2.75" fill="#1b1626"/>
+        <rect x="36" y="34" width="5.5" height="8.5" rx="2.75" fill="#1b1626"/>
+        <path d="M25 45.5 Q32 51.5 39 45.5" fill="none" stroke="#1b1626" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex;gap:10px;align-items:flex-end">
+        <svg class="small" viewBox="0 0 64 64"><path d="M15 13 H49 A11 11 0 0 1 60 24 V46 L51 55 H15 A11 11 0 0 1 4 44 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="3.6" stroke-linejoin="round"/><path d="M15 13 H49 A11 11 0 0 1 60 24 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="3.6" stroke-linejoin="round"/><rect x="22" y="34" width="6.5" height="9.5" rx="3.25" fill="#1b1626"/><rect x="35.5" y="34" width="6.5" height="9.5" rx="3.25" fill="#1b1626"/><path d="M24.5 46 Q32 52.5 39.5 46" fill="none" stroke="#1b1626" stroke-width="3.6" stroke-linecap="round"/></svg>
+        <svg class="tiny" viewBox="0 0 64 64"><path d="M15 13 H49 A11 11 0 0 1 60 24 V46 L51 55 H15 A11 11 0 0 1 4 44 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="4.6"/><path d="M15 13 H49 A11 11 0 0 1 60 24 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="4.6"/><rect x="21" y="33" width="8" height="11" rx="4" fill="#1b1626"/><rect x="35" y="33" width="8" height="11" rx="4" fill="#1b1626"/><path d="M24 46 Q32 53 40 46" fill="none" stroke="#1b1626" stroke-width="4.6" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <div>
+      <div class="meta"><b>A2 · Wide node, column ticks</b>Header now reads as a title bar, not a roof. Ticks vanish at 16 and nothing is lost.</div>
+      <div class="tag">best at 32 · face survives</div>
+    </div>
+  </div>
+
+  <!-- A3 · node + spark, no face -->
+  <div class="cell">
+    <div class="sizes">
+      <svg class="big" viewBox="0 0 64 64">
+        <path d="M15 13 H49 A11 11 0 0 1 60 24 V46 L51 55 H15 A11 11 0 0 1 4 44 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M15 13 H49 A11 11 0 0 1 60 24 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M32 30 L35.6 40.4 L46 44 L35.6 47.6 L32 58 L28.4 47.6 L18 44 L28.4 40.4 Z" fill="#ffb020" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+      </svg>
+      <div style="display:flex;gap:10px;align-items:flex-end">
+        <svg class="small" viewBox="0 0 64 64"><path d="M15 13 H49 A11 11 0 0 1 60 24 V46 L51 55 H15 A11 11 0 0 1 4 44 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="3.6"/><path d="M15 13 H49 A11 11 0 0 1 60 24 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="3.6"/><path d="M32 29 L36 40 L47 44 L36 48 L32 59 L28 48 L17 44 L28 40 Z" fill="#ffb020" stroke="#1b1626" stroke-width="3.6"/></svg>
+        <svg class="tiny" viewBox="0 0 64 64"><path d="M15 13 H49 A11 11 0 0 1 60 24 V46 L51 55 H15 A11 11 0 0 1 4 44 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="4.6"/><path d="M15 13 H49 A11 11 0 0 1 60 24 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="4.6"/><path d="M32 27 L37 40 L50 44 L37 48 L32 61 L27 48 L14 44 L27 40 Z" fill="#ffb020" stroke="#1b1626" stroke-width="4.6"/></svg>
+      </div>
+    </div>
+    <div>
+      <div class="meta"><b>A3 · Node + spark</b>Same node, the body holds a star instead of a face. Sharper at 16, but it stops being a character.</div>
+      <div class="tag">coldest of the four</div>
+    </div>
+  </div>
+
+  <!-- A4 · face + spark sticker, dog-ear top-right -->
+  <div class="cell">
+    <div class="sizes">
+      <svg class="big" viewBox="0 0 64 64">
+        <path d="M15 13 H46 L56 23 V46 A11 11 0 0 1 45 57 H15 A11 11 0 0 1 4 46 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M15 13 H46 L56 23 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <rect x="21" y="34" width="5.5" height="8.5" rx="2.75" fill="#1b1626"/>
+        <rect x="35" y="34" width="5.5" height="8.5" rx="2.75" fill="#1b1626"/>
+        <path d="M24 45.5 Q31 51.5 38 45.5" fill="none" stroke="#1b1626" stroke-width="3" stroke-linecap="round"/>
+        <path d="M52 30 L53.6 35.4 L59 37 L53.6 38.6 L52 44 L50.4 38.6 L45 37 L50.4 35.4 Z" fill="#ff4d8d" stroke="#1b1626" stroke-width="2.4" stroke-linejoin="round"/>
+      </svg>
+      <div style="display:flex;gap:10px;align-items:flex-end">
+        <svg class="small" viewBox="0 0 64 64"><path d="M15 13 H46 L56 23 V46 A11 11 0 0 1 45 57 H15 A11 11 0 0 1 4 46 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="3.6"/><path d="M15 13 H46 L56 23 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="3.6"/><rect x="20" y="34" width="7" height="10" rx="3.5" fill="#1b1626"/><rect x="34" y="34" width="7" height="10" rx="3.5" fill="#1b1626"/><path d="M23 46 Q31 52.5 39 46" fill="none" stroke="#1b1626" stroke-width="3.6" stroke-linecap="round"/></svg>
+        <svg class="tiny" viewBox="0 0 64 64"><path d="M15 13 H46 L56 23 V46 A11 11 0 0 1 45 57 H15 A11 11 0 0 1 4 46 V24 A11 11 0 0 1 15 13 Z" fill="#fff6e5" stroke="#1b1626" stroke-width="4.6"/><path d="M15 13 H46 L56 23 V26 H4 V24 A11 11 0 0 1 15 13 Z" fill="#c6f24e" stroke="#1b1626" stroke-width="4.6"/><rect x="19" y="33" width="8" height="11" rx="4" fill="#1b1626"/><rect x="34" y="33" width="8" height="11" rx="4" fill="#1b1626"/><path d="M22 46 Q31 53 40 46" fill="none" stroke="#1b1626" stroke-width="4.6" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <div>
+      <div class="meta"><b>A4 · Face + level sticker</b>The dog-ear returns as the peel; the pink star is the XP you just earned. Two ideas, one of them small.</div>
+      <div class="tag">most ownable · riskiest</div>
+    </div>
+  </div>
+
+  <!-- E2 · caret flag, refined -->
+  <div class="cell">
+    <div class="sizes">
+      <svg class="big" viewBox="0 0 64 64">
+        <path d="M12 12 H21 V52 H12 Z" fill="#7b5cff" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M26 14 H54 L45 27 L54 40 H26 Z" fill="#ff4d8d" stroke="#1b1626" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M26 14 V56" stroke="#1b1626" stroke-width="3" stroke-linecap="round"/>
+        <path d="M45 27 L45 27" stroke="#1b1626"/>
+      </svg>
+      <div style="display:flex;gap:10px;align-items:flex-end">
+        <svg class="small" viewBox="0 0 64 64"><path d="M12 12 H21 V52 H12 Z" fill="#7b5cff" stroke="#1b1626" stroke-width="3.6"/><path d="M26 14 H54 L45 27 L54 40 H26 Z" fill="#ff4d8d" stroke="#1b1626" stroke-width="3.6"/><path d="M26 14 V56" stroke="#1b1626" stroke-width="3.6"/></svg>
+        <svg class="tiny" viewBox="0 0 64 64"><path d="M10 12 H22 V52 H10 Z" fill="#7b5cff" stroke="#1b1626" stroke-width="4.6"/><path d="M26 14 H56 L46 27 L56 40 H26 Z" fill="#ff4d8d" stroke="#1b1626" stroke-width="4.6"/></svg>
+      </div>
+    </div>
+    <div>
+      <div class="meta"><b>E2 · Caret flag, tightened</b>Still the boldest silhouette of the six. But it says “finish”, not “play”.</div>
+      <div class="tag">bold · not fun</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

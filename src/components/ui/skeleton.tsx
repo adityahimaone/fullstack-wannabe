@@ -1,13 +1,13 @@
 import { cn } from '@/lib/utils';
 
+/**
+ * No shimmer gradient — the brand has no gradients. A skeleton is just a
+ * muted slab that breathes, which is enough to read as "content on its way".
+ */
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        'relative overflow-hidden rounded-md bg-muted',
-        'after:absolute after:inset-0 after:-translate-x-full after:animate-shimmer after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent',
-        className,
-      )}
+      className={cn('animate-pulse rounded-[10px] border-[1.5px] border-border bg-muted', className)}
       {...props}
     />
   );

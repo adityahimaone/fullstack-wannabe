@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fullstack Wannabe — brand system v1.0</title>
+<meta name="description" content="The Fullstack Wannabe brand system: Wanni, a table with ambition. Sticker stock, hard ink, six candy worlds.">
+<link rel="icon" href="../public/brand/wannabe/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ══ tokens ══════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#1B1626; --paper:#FFF6E5; --card:#FFFDF7; --white:#FFFFFF;
+  --lime:#C6F24E; --pink:#FF4D8D; --cyan:#2ED3F0; --grape:#6C4BF0;
+  --mango:#FFB020; --mint:#2ED3A6; --chili:#DC1F2C;
+  --edge:var(--ink); --offset:var(--ink);
+  --text:var(--ink); --text-2:#5C5268; --on-lime:#1B1626; --on-danger:#FFF6E5;
+  --stage:#171226; --line:rgba(27,22,38,.15); --hair:rgba(27,22,38,.28);
+  --field:#FFFDF7;
+  --r-sm:8px; --r-md:12px; --r-lg:18px; --r-xl:26px; --r-pill:999px;
+  --edge-w:2.5px;
+  --pop:cubic-bezier(.34,1.56,.64,1);
+  --t-1:90ms; --t-2:180ms; --t-3:420ms;
+  --shadow:5px 5px 0 var(--offset);
+}
+[data-theme="dark"]{
+  --paper:#171226; --card:#221A33; --white:#2B2142;
+  --edge:#FFF6E5; --offset:#0B0813;
+  --text:#FFF6E5; --text-2:#BDB2CE; --on-lime:#1B1626;
+  --stage:#0E0A17; --line:rgba(255,246,229,.18); --hair:rgba(255,246,229,.3);
+  --chili:#FF7A84; --on-danger:#1B1626;
+  --field:#241B36;
+  --wm-ink:#FFF6E5;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  margin:0;background:var(--paper);color:var(--text);
+  font:17px/1.6 "Instrument Sans",ui-sans-serif,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01" on;
+  transition:background var(--t-2) linear,color var(--t-2) linear;
+}
+h1,h2,h3,h4,p,figure,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+::selection{background:var(--lime);color:var(--ink)}
+:focus-visible{outline:3px solid var(--grape);outline-offset:3px;border-radius:4px}
+
+/* ══ type ════════════════════════════════════════════════════════════════ */
+.display{font-family:"Bricolage Grotesque","Instrument Sans",sans-serif;font-weight:700;letter-spacing:-.035em;line-height:.98;text-wrap:balance}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-2);line-height:1}
+.lede{font-size:19px;line-height:1.55;text-wrap:pretty;color:var(--text-2)}
+p{text-wrap:pretty}
+.small{font-size:14px;line-height:1.5}
+
+/* ══ shell ═══════════════════════════════════════════════════════════════ */
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.topbar{
+  position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(12px);border-bottom:var(--edge-w) solid var(--edge);
+}
+.topbar-in{display:flex;align-items:center;gap:14px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Bricolage Grotesque";font-weight:700;letter-spacing:-.02em;font-size:15px}
+.brand .mark{width:30px;height:30px;flex:none}
+.tb-nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.tb-nav::-webkit-scrollbar{display:none}
+.tb-nav a{
+  font-family:"JetBrains Mono";font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;padding:7px 10px;border-radius:var(--r-pill);color:var(--text-2);white-space:nowrap;
+}
+.tb-nav a:hover{background:var(--card);color:var(--text);box-shadow:inset 0 0 0 2px var(--edge)}
+.theme-btn{
+  margin-left:8px;flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;
+  border:var(--edge-w) solid var(--edge);background:var(--card);color:var(--text);cursor:pointer;
+  box-shadow:3px 3px 0 var(--offset);transition:transform var(--t-1),box-shadow var(--t-1);
+}
+.theme-btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--offset)}
+.icon-sun{display:none}
+[data-theme="dark"] .icon-sun{display:block}
+[data-theme="dark"] .icon-moon{display:none}
+
+section{padding:84px 0;border-top:var(--edge-w) solid var(--edge)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:40px;align-items:end;margin-bottom:44px}
+.sec-head h2{font-size:clamp(30px,4vw,46px)}
+.sec-head .cap{font-size:15px;line-height:1.55;color:var(--text-2);max-width:44ch;padding-bottom:6px}
+.sec-num{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.sec-num b{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.16em;color:var(--text-2);font-weight:500}
+.sec-num i{display:block;width:36px;height:2px;background:var(--edge);opacity:.35}
+
+/* ══ objects ═════════════════════════════════════════════════════════════ */
+.card{background:var(--card);border:var(--edge-w) solid var(--edge);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.pad{padding:26px}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.grid>*,.hero-grid>*,.sec-head>*,.logo-card>*{min-width:0}
+.rule{height:2px;background:var(--edge);opacity:.2;border:0;margin:0}
+
+/* ══ hero ════════════════════════════════════════════════════════════════ */
+.hero{padding:64px 0 84px;border-top:0;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:56px;align-items:center}
+.hero h1{font-size:clamp(46px,6.4vw,82px);margin:22px 0 22px}
+.hero .lede{max-width:38ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+.stats{display:flex;flex-wrap:wrap;gap:34px;margin-top:44px;padding-top:26px;border-top:2px dashed var(--hair)}
+.stat b{display:block;font-family:"Bricolage Grotesque";font-size:27px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.stat span{font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-2)}
+.lockup-hero{width:100%;max-width:430px;height:auto;display:block;margin-bottom:6px}
+
+/* sticker board */
+.board{
+  position:relative;aspect-ratio:1/1.06;border-radius:var(--r-xl);border:var(--edge-w) solid var(--edge);
+  background:var(--stage);box-shadow:8px 8px 0 var(--offset);overflow:hidden;isolation:isolate;
+}
+.board .dots{position:absolute;inset:0;background-image:radial-gradient(#FFF6E5 1.3px,transparent 1.3px);background-size:13px 13px;opacity:.16}
+.board .glow{position:absolute;inset:0;background:radial-gradient(60% 55% at 50% 42%,rgba(198,242,78,.22),transparent 70%)}
+.board .hero-mark{position:absolute;left:50%;top:46%;width:47%;translate:-50% -50%}
+.board .cast-s{position:absolute;width:13%;opacity:.95}
+.board .tagpill{
+  position:absolute;left:50%;bottom:8%;translate:-50% 0;white-space:nowrap;
+  font-family:"JetBrains Mono";font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:#FFF6E5;border:2px solid rgba(255,246,229,.5);border-radius:999px;padding:6px 12px;
+}
+.conf{position:absolute;border-radius:2px}
+
+/* ══ buttons ═════════════════════════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:12px 20px;border-radius:14px;border:var(--edge-w) solid var(--edge);
+  font-family:"Instrument Sans";font-weight:650;font-size:16px;line-height:1;cursor:pointer;
+  background:var(--card);color:var(--text);text-decoration:none;
+  box-shadow:4px 4px 0 var(--offset);
+  transition:transform var(--t-1) var(--pop),box-shadow var(--t-1) var(--pop),background var(--t-2);
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--offset)}
+.btn:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--offset)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:3px 3px 0 var(--offset)}
+.btn-primary{background:var(--lime);color:var(--on-lime)}
+.btn-grape{background:var(--grape);color:#FFF6E5}
+.btn-quiet{background:transparent;box-shadow:none;border-color:transparent;color:var(--text-2)}
+.btn-quiet:hover{box-shadow:none;transform:none;background:var(--card);border-color:var(--edge)}
+.btn-sm{padding:9px 14px;font-size:14px;border-radius:11px;box-shadow:3px 3px 0 var(--offset)}
+.btn-lg{padding:15px 26px;font-size:17px;border-radius:16px}
+
+/* ══ chips / tags ════════════════════════════════════════════════════════ */
+.chip{
+  display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:var(--r-pill);
+  border:2px solid var(--edge);font-family:"JetBrains Mono";font-size:10.5px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;background:var(--card);color:var(--text);
+}
+.chip .dot{width:8px;height:8px;border-radius:3px;background:currentColor}
+.chip-cyan{background:var(--cyan);color:var(--ink)}
+.chip-pink{background:var(--pink);color:var(--ink)}
+.chip-lime{background:var(--lime);color:var(--ink)}
+.chip-grape{background:var(--grape);color:#FFF6E5}
+.chip-mango{background:var(--mango);color:var(--ink)}
+
+/* ══ node card — the signature object ════════════════════════════════════ */
+.node{
+  background:var(--card);border:var(--edge-w) solid var(--edge);border-radius:16px;
+  box-shadow:4px 4px 0 var(--offset);overflow:hidden;
+}
+.node-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 13px;border-bottom:var(--edge-w) solid var(--edge);background:var(--cyan);
+  color:var(--ink);font-family:"JetBrains Mono";font-size:10.5px;font-weight:700;
+  letter-spacing:.13em;text-transform:uppercase;
+}
+.node-head.alt{background:var(--pink)}
+.node-head.alt2{background:var(--mango)}
+.node-row{
+  display:flex;align-items:center;gap:10px;padding:8px 13px;border-bottom:1px solid var(--line);
+  font-family:"JetBrains Mono";font-size:12.5px;color:var(--text);
+}
+.node-row:last-child{border-bottom:0}
+.node-row .pk{color:var(--grape);font-weight:700}
+.node-row .type{margin-left:auto;color:var(--text-2);font-size:11px}
+
+/* ══ meter ═══════════════════════════════════════════════════════════════ */
+.meter{display:flex;gap:3px;width:100%}
+.meter i{height:11px;flex:1;border-radius:3px;background:color-mix(in srgb,var(--edge) 16%,transparent);border:1.5px solid transparent}
+.meter i.on{background:var(--mango);border-color:var(--edge)}
+.meter.thin i{height:7px}
+.meter.lime i.on{background:var(--lime)}
+.meter.pink i.on{background:var(--pink)}
+
+/* ══ badge sticker ═══════════════════════════════════════════════════════ */
+.badge{
+  position:relative;display:grid;place-items:center;gap:6px;padding:14px 12px 12px;text-align:center;
+  border:var(--edge-w) solid var(--edge);border-radius:14px;background:var(--card);
+  box-shadow:3px 3px 0 var(--offset);rotate:-2deg;
+}
+.badge svg{width:30px;height:30px}
+.badge b{font-family:"Bricolage Grotesque";font-size:12.5px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.badge span{font-family:"JetBrains Mono";font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2)}
+.badge.earned{background:var(--mango)}
+.badge.earned span{color:rgba(27,22,38,.7)}
+.badge.locked{background:transparent;box-shadow:none;border-style:dashed;rotate:0deg;opacity:.6}
+
+/* ══ forms ═══════════════════════════════════════════════════════════════ */
+.field{display:grid;gap:7px}
+.field label{font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-2)}
+.input{
+  width:100%;padding:12px 14px;font:16px/1.4 "Instrument Sans";color:var(--text);
+  background:var(--field);border:var(--edge-w) solid var(--edge);border-radius:12px;
+  box-shadow:3px 3px 0 var(--offset);transition:box-shadow var(--t-1),transform var(--t-1);
+}
+.input::placeholder{color:color-mix(in srgb,var(--text-2) 70%,transparent)}
+.input:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--offset)}
+.input:focus{outline:none;transform:translate(2px,2px);box-shadow:0 0 0 var(--offset);border-color:var(--grape);box-shadow:0 0 0 3px color-mix(in srgb,var(--grape) 30%,transparent)}
+.input[aria-invalid="true"]{border-color:var(--chili);box-shadow:3px 3px 0 var(--chili)}
+.input:disabled{opacity:.5;background:color-mix(in srgb,var(--field) 60%,var(--paper));box-shadow:2px 2px 0 var(--offset);cursor:not-allowed;transform:none}
+.hint{font-size:13px;color:var(--text-2)}
+.err{font-size:13px;color:var(--chili);display:flex;align-items:center;gap:6px;font-weight:600}
+[data-theme="dark"] .err{color:var(--chili)}
+.switch{
+  position:relative;width:52px;height:30px;border:var(--edge-w) solid var(--edge);border-radius:999px;
+  background:var(--field);cursor:pointer;padding:0;box-shadow:3px 3px 0 var(--offset);transition:background var(--t-2);
+}
+.switch::after{
+  content:"";position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:999px;
+  background:var(--edge);transition:translate var(--t-2) var(--pop),background var(--t-2);
+}
+.switch[aria-checked="true"]{background:var(--lime)}
+.switch[aria-checked="true"]::after{translate:22px 0;background:var(--ink)}
+.radio{display:flex;align-items:center;gap:10px;padding:11px 13px;border:var(--edge-w) solid var(--edge);border-radius:12px;background:var(--field);cursor:pointer;font-size:15px}
+.radio input{appearance:none;width:20px;height:20px;border:2.5px solid var(--edge);border-radius:7px;margin:0;display:grid;place-items:center;flex:none}
+.radio input:checked{background:var(--grape);border-color:var(--edge)}
+.radio input:checked::after{content:"";width:9px;height:9px;border-radius:3px;background:#FFF6E5}
+.radio:has(input:checked){background:color-mix(in srgb,var(--grape) 12%,var(--field))}
+
+/* ══ colour ══════════════════════════════════════════════════════════════ */
+.swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.sw{border:var(--edge-w) solid var(--edge);border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 var(--offset);background:var(--card)}
+.sw .chipbox{height:74px;border-bottom:var(--edge-w) solid var(--edge);display:grid;place-items:center;font-family:"Bricolage Grotesque";font-weight:700;font-size:19px}
+.sw .meta{padding:9px 11px}
+.sw .meta b{display:block;font-size:13.5px;letter-spacing:-.01em}
+.sw .meta code{font-family:"JetBrains Mono";font-size:10.5px;color:var(--text-2)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{
+  text-align:left;font-family:"JetBrains Mono";font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--text-2);font-weight:500;padding:0 12px 9px;border-bottom:var(--edge-w) solid var(--edge);
+}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"JetBrains Mono";font-variant-numeric:tabular-nums;font-size:12.5px}
+
+/* ══ marks ═══════════════════════════════════════════════════════════════ */
+.stage{
+  position:relative;background:var(--stage);border-radius:var(--r-xl);border:var(--edge-w) solid var(--edge);
+  padding:34px;overflow:hidden;
+}
+.stage .dots{position:absolute;inset:0;background-image:radial-gradient(#FFF6E5 1.2px,transparent 1.2px);background-size:14px 14px;opacity:.14}
+.logo-card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:0;border:var(--edge-w) solid var(--edge);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow);background:var(--card)}
+.logo-card .stage{border:0;border-radius:0;display:grid;place-items:center;min-height:340px;border-right:var(--edge-w) solid var(--edge)}
+.clearspace{position:relative;padding:38px}
+.clearspace::before{content:"";position:absolute;inset:26px;border:2px dashed color-mix(in srgb,#FFF6E5 55%,transparent);border-radius:12px}
+.logo-card .mark-lg{width:172px;height:172px;position:relative;z-index:1}
+.specs{padding:26px;display:grid;gap:18px;align-content:start}
+.spec{display:flex;justify-content:space-between;gap:14px;padding-bottom:9px;border-bottom:1px solid var(--line);font-size:14px}
+.spec b{font-family:"JetBrains Mono";font-size:12px;font-weight:500}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.do,.dont{border:2px solid var(--edge);border-radius:11px;padding:9px 11px;font-size:12.5px;line-height:1.4}
+.do{background:color-mix(in srgb,var(--mint) 22%,transparent)}
+.dont{background:color-mix(in srgb,var(--chili) 14%,transparent)}
+.do b,.dont b{display:block;font-family:"JetBrains Mono";font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.icons-row{display:flex;align-items:flex-end;gap:18px;margin-top:4px}
+.icons-row figure{display:grid;gap:6px;justify-items:center}
+.icons-row figcaption{font-family:"JetBrains Mono";font-size:9px;color:var(--text-2);letter-spacing:.1em}
+.wordmark-card{display:grid;gap:20px;padding:30px}
+.wm-big{width:100%;max-width:560px;height:auto}
+.wm-scale{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;padding-top:18px;border-top:2px dashed var(--hair)}
+.wm-scale figure{display:grid;gap:6px}
+.wm-scale figcaption{font-family:"JetBrains Mono";font-size:9.5px;color:var(--text-2);letter-spacing:.1em}
+.drawer{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.cast-tile{
+  border:var(--edge-w) solid var(--edge);border-radius:14px;background:var(--card);padding:16px;
+  box-shadow:3px 3px 0 var(--offset);display:grid;gap:8px;align-content:start;
+}
+.cast-tile svg{width:52px;height:52px}
+.cast-tile b{font-size:13.5px;letter-spacing:-.01em}
+.cast-tile span{font-family:"JetBrains Mono";font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
+.s4{grid-column:span 4}.s5{grid-column:span 5}.s3{grid-column:span 3}.s6{grid-column:span 6}
+
+/* ══ parts / demo wells ══════════════════════════════════════════════════ */
+.well{
+  border:var(--edge-w) solid var(--edge);border-radius:var(--r-lg);background:var(--card);
+  padding:24px;display:grid;gap:16px;box-shadow:var(--shadow);
+}
+.well-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.well-h h3{font-family:"Bricolage Grotesque";font-size:16px;font-weight:700;letter-spacing:-.02em}
+.well-h span{font-family:"JetBrains Mono";font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-2)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.states{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end}
+.state{display:grid;gap:8px;justify-items:center}
+.state span{font-family:"JetBrains Mono";font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2)}
+
+/* ══ decoration ══════════════════════════════════════════════════════════ */
+.deco-tile{
+  position:relative;overflow:hidden;border:var(--edge-w) solid var(--edge);border-radius:16px;
+  background:var(--card);min-height:150px;box-shadow:3px 3px 0 var(--offset);
+}
+.deco-tile .label{
+  position:absolute;left:12px;bottom:10px;font-family:"JetBrains Mono";font-size:9.5px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--text-2);
+}
+.halftone{background-image:radial-gradient(var(--edge) 1.4px,transparent 1.4px);background-size:11px 11px;opacity:.85}
+.route{stroke:var(--edge);stroke-width:3;stroke-dasharray:0 11;stroke-linecap:round;fill:none}
+.squiggle{stroke:var(--pink);stroke-width:6;stroke-linecap:round;fill:none}
+
+/* ══ tokens / code ═══════════════════════════════════════════════════════ */
+pre{
+  margin:0;padding:22px;overflow:auto;background:var(--stage);color:#FFF6E5;border-radius:var(--r-lg);
+  border:var(--edge-w) solid var(--edge);font-family:"JetBrains Mono";font-size:12.5px;line-height:1.75;
+}
+pre .k{color:#C6F24E}pre .v{color:#2ED3F0}pre .c{color:rgba(255,246,229,.45);font-style:italic}
+
+/* ══ footer ══════════════════════════════════════════════════════════════ */
+footer{--wm-ink:#FFF6E5;padding:56px 0 72px;border-top:var(--edge-w) solid var(--edge);background:var(--stage);color:#FFF6E5}
+footer .foot-in{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-end}
+footer .mono{color:rgba(255,246,229,.55);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ══ responsive ══════════════════════════════════════════════════════════ */
+@media (max-width:980px){
+  .hero-grid,.sec-head,.logo-card{grid-template-columns:1fr}
+  .logo-card .stage{border-right:0;border-bottom:var(--edge-w) solid var(--edge);min-height:280px}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:1fr}
+  .s4,.s5,.s3,.s6{grid-column:span 6}
+  .board{aspect-ratio:1/.9;max-width:420px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .wrap{padding:0 20px}
+  section{padding:60px 0}
+  .g2,.g4{grid-template-columns:1fr}
+  .swatches{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .s4,.s5,.s3,.s6{grid-column:span 12}
+  .hero{padding:40px 0 60px}
+  .hero h1{margin:18px 0}
+  .tb-nav{display:none}
+  .stage,.pad{padding:20px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px}
+  .onesentence{grid-template-columns:1fr!important;gap:16px!important}
+  .stat b{font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<!--@sprite-->
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand"><svg class="mark"><use href="#wanni"/></svg> fullstack wannabe</div>
+    <nav class="tb-nav">
+      <a href="#belief">Belief</a>
+      <a href="#material">Material</a>
+      <a href="#marks">Marks</a>
+      <a href="#colour">Colour</a>
+      <a href="#type">Type</a>
+      <a href="#parts">Parts</a>
+      <a href="#forms">Forms</a>
+      <a href="#decor">Decoration</a>
+      <a href="#tokens">Tokens</a>
+    </nav>
+    <button class="theme-btn" data-toggle aria-pressed="false" aria-label="Toggle dark theme">
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"/>
+      </svg>
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main>
+<!-- ══ hero ═══════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="sec-num"><b>brand system</b><i></i><b>v1.0 · 2026</b></div>
+      <svg class="lockup-hero" viewBox="0 0 355 66" aria-label="fullstack wannabe"><use href="#wanni" width="66" height="66"/><use href="#wm" x="76" y="7" width="275.4" height="52"/></svg>
+      <h1 class="display">A table with<br>ambition.</h1>
+      <p class="lede">Every backend starts as one rectangle with rows. Wanni is that rectangle — the first thing you draw in Schema Studio — and it has decided it wants to be a full stack.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="#marks">Meet Wanni
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-lg" href="#belief">Why this exists</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>6</b><span>cast marks</span></div>
+        <div class="stat"><b>6</b><span>candy colours</span></div>
+        <div class="stat"><b>16.45:1</b><span>ink on paper</span></div>
+        <div class="stat"><b>0</b><span>blurred shadows</span></div>
+      </div>
+    </div>
+
+    <div class="board" aria-hidden="true">
+      <div class="dots"></div>
+      <div class="glow"></div>
+      <svg class="hero-mark" viewBox="0 0 66 66"><use href="#wanni"/></svg>
+      <svg class="cast-s" style="left:7%;top:12%;rotate:-12deg" viewBox="0 0 64 64"><use href="#spark"/></svg>
+      <svg class="cast-s" style="right:6%;top:22%;rotate:14deg" viewBox="0 0 64 64"><use href="#bolt"/></svg>
+      <svg class="cast-s" style="left:11%;bottom:20%;rotate:8deg" viewBox="0 0 64 64"><use href="#dice"/></svg>
+      <svg class="cast-s" style="right:12%;bottom:24%;rotate:-9deg" viewBox="0 0 64 64"><use href="#key"/></svg>
+      <svg class="cast-s" style="right:34%;top:4%;width:9%;rotate:18deg" viewBox="0 0 64 64"><use href="#flag"/></svg>
+      <span class="conf" style="left:20%;top:34%;width:10px;height:5px;background:var(--pink);rotate:24deg"></span>
+      <span class="conf" style="left:76%;top:46%;width:9px;height:5px;background:var(--cyan);rotate:-18deg"></span>
+      <span class="conf" style="left:64%;bottom:14%;width:11px;height:5px;background:var(--lime);rotate:42deg"></span>
+      <span class="conf" style="left:30%;bottom:9%;width:8px;height:8px;border-radius:50%;background:var(--mango)"></span>
+      <span class="tagpill">schema → query → code</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 01 belief ══════════════════════════════════════════════════════ -->
+<section id="belief">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>01</b><i></i><b>belief</b></div>
+        <h2 class="display">A backend is a game.<br>The score is just hidden.</h2>
+      </div>
+      <p class="cap">XP, streaks, worlds, loot — the learning app already had the mechanics. The old identity dressed them as an audit: near-black, one accent, mono labels. Correct, and impossible to be curious in.</p>
+    </div>
+
+    <div class="grid g3">
+      <article class="card pad">
+        <div class="chip chip-lime" style="margin-bottom:14px"><span class="dot"></span>belief</div>
+        <h3 class="display" style="font-size:19px;margin-bottom:8px">Learning is a loop, not a library</h3>
+        <p class="small" style="color:var(--text-2)">You draw a table, you query it, you ship it, you level up. The identity should show the loop — progress you can see from across the room, not a progress bar you have to hover.</p>
+      </article>
+      <article class="card pad">
+        <div class="chip chip-pink" style="margin-bottom:14px"><span class="dot"></span>enemy</div>
+        <h3 class="display" style="font-size:19px;margin-bottom:8px">The developer-tool costume</h3>
+        <p class="small" style="color:var(--text-2)">Slate greys, 1px borders, a single electric accent, and a monospace label pretending that seriousness equals rigour. It reads as an audit, and audits are not played twice.</p>
+      </article>
+      <article class="card pad">
+        <div class="chip chip-cyan" style="margin-bottom:14px"><span class="dot"></span>the mark</div>
+        <h3 class="display" style="font-size:19px;margin-bottom:8px">The table has a face</h3>
+        <p class="small" style="color:var(--text-2)">Wanni is the node you draw first: a header strip, a body, a dog-eared corner. The face is not decoration — it is the product's whole promise that a schema is something you build with, not at.</p>
+      </article>
+    </div>
+
+    <div class="card onesentence" style="margin-top:20px;padding:26px;display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center">
+      <svg style="width:84px;height:84px" viewBox="0 0 66 66" aria-hidden="true"><use href="#wanni"/></svg>
+      <div>
+        <p class="eyebrow" style="margin-bottom:8px">one sentence, rejectable</p>
+        <p style="font-size:19px;line-height:1.45;max-width:70ch">Fullstack Wannabe is a browser-only backend playground for self-taught developers that turns schema design into levels you can clear, made of <b>sticker stock, a 2.5px ink edge and six candy worlds</b>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 02 material ════════════════════════════════════════════════════ -->
+<section id="material">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>02</b><i></i><b>material</b></div>
+        <h2 class="display">Sticker stock,<br>not glass.</h2>
+      </div>
+      <p class="cap">Four rules produce every surface in the system. They are cheap to follow and impossible to fake: an edge you can measure, an offset with no blur, one flat fill per object, and a header strip that names what the object is.</p>
+    </div>
+
+    <div class="grid g4">
+      <div class="well">
+        <div class="well-h"><h3>Edge</h3><span>2.5px</span></div>
+        <div style="height:74px;display:grid;place-items:center">
+          <div style="width:74px;height:56px;border:2.5px solid var(--edge);border-radius:12px;background:var(--cyan)"></div>
+        </div>
+        <p class="small" style="color:var(--text-2)">Every object is cut from one sheet. The edge is always the foreground colour, so it flips with the theme instead of disappearing.</p>
+      </div>
+      <div class="well">
+        <div class="well-h"><h3>Offset</h3><span>4px · 0 blur</span></div>
+        <div style="height:74px;display:grid;place-items:center">
+          <div style="width:74px;height:56px;border:2.5px solid var(--edge);border-radius:12px;background:var(--lime);box-shadow:4px 4px 0 var(--offset)"></div>
+        </div>
+        <p class="small" style="color:var(--text-2)">Depth is a second sticker underneath, not a light source. A blur would turn paper into plastic.</p>
+      </div>
+      <div class="well">
+        <div class="well-h"><h3>Fill</h3><span>1 per object</span></div>
+        <div style="height:74px;display:grid;place-items:center;gap:8px">
+          <div style="display:flex;gap:8px">
+            <div style="width:34px;height:34px;border:2.5px solid var(--edge);border-radius:10px;background:var(--pink)"></div>
+            <div style="width:34px;height:34px;border:2.5px solid var(--edge);border-radius:10px;background:var(--mango)"></div>
+            <div style="width:34px;height:34px;border:2.5px solid var(--edge);border-radius:10px;background:var(--mint)"></div>
+          </div>
+        </div>
+        <p class="small" style="color:var(--text-2)">Flat, saturated, no gradient. The colour is a label, so two colours on one object would be two labels.</p>
+      </div>
+      <div class="well">
+        <div class="well-h"><h3>Header</h3><span>names the object</span></div>
+        <div class="node" style="box-shadow:none">
+          <div class="node-head" style="padding:6px 9px;font-size:9px">users</div>
+          <div class="node-row" style="padding:5px 9px;font-size:10px">id <span class="type">int</span></div>
+        </div>
+        <p class="small" style="color:var(--text-2)">Every card, panel and quest carries a strip. It is the same move as the mark, at every scale.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px;padding:26px">
+      <div class="well-h" style="margin-bottom:20px"><h3 style="font-size:15px">The press</h3><span>hover → rest → pressed</span></div>
+      <div class="states">
+        <div class="state">
+          <button class="btn btn-primary" style="transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--offset)">Run query</button>
+          <span>hover</span>
+        </div>
+        <div class="state">
+          <button class="btn btn-primary">Run query</button>
+          <span>rest</span>
+        </div>
+        <div class="state">
+          <button class="btn btn-primary" style="transform:translate(4px,4px);box-shadow:0 0 0 var(--offset)">Run query</button>
+          <span>pressed</span>
+        </div>
+        <div class="state">
+          <button class="btn btn-primary" disabled>Run query</button>
+          <span>disabled</span>
+        </div>
+      </div>
+      <p class="small" style="color:var(--text-2);margin-top:18px;max-width:74ch">The button does not fade when pressed — it travels into its own shadow, 4px, in 90ms. That single gesture is the difference between a web form and an arcade cabinet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 03 marks ═══════════════════════════════════════════════════════ -->
+<section id="marks">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>03</b><i></i><b>marks</b></div>
+        <h2 class="display">Wanni, and five<br>things it says.</h2>
+      </div>
+      <p class="cap">A mark is not a system. This one ships with a compact drawing, a glyph, a hand-drawn wordmark and six cast marks — each with one job, all cut with the same 2.8 line.</p>
+    </div>
+
+    <div class="logo-card">
+      <div class="stage">
+        <div class="dots"></div>
+        <div class="clearspace"><svg class="mark-lg" viewBox="0 0 66 66" aria-label="Wanni, the primary mark"><use href="#wanni"/></svg></div>
+      </div>
+      <div class="specs">
+        <div>
+          <p class="eyebrow" style="margin-bottom:6px">logo / 01 · mark + wordmark</p>
+          <h3 class="display" style="font-size:26px">Wanni</h3>
+        </div>
+        <div class="spec"><span>Header mark</span><b>34 px</b></div>
+        <div class="spec"><span>Minimum</span><b>24 px</b></div>
+        <div class="spec"><span>Compact minimum</span><b>16 px</b></div>
+        <div class="spec"><span>Clear space</span><b>0.5× tile</b></div>
+        <div class="spec"><span>Grid</span><b>64 · cut 2.8</b></div>
+        <div class="icons-row">
+          <figure><svg style="width:48px;height:48px" viewBox="0 0 66 66"><use href="#wanni"/></svg><figcaption>48</figcaption></figure>
+          <figure><svg style="width:32px;height:32px" viewBox="0 0 64 64"><use href="#compact"/></svg><figcaption>32</figcaption></figure>
+          <figure><svg style="width:16px;height:16px" viewBox="0 0 64 64"><use href="#compact"/></svg><figcaption>16</figcaption></figure>
+          <figure><svg style="width:32px;height:32px" viewBox="0 0 64 64"><use href="#wanni-mono"/></svg><figcaption>mono</figcaption></figure>
+        </div>
+        <div class="dos">
+          <div class="do"><b>Do</b>Keep the 4px offset when the mark sits on paper.</div>
+          <div class="dont"><b>Don't</b>Re-cut the face, add a second accent, or outline the tile in colour.</div>
+        </div>
+        <div class="row">
+          <a class="btn btn-sm" href="../public/brand/wannabe/mark.svg" download>mark.svg</a>
+          <a class="btn btn-sm" href="../public/brand/wannabe/lockups/horizontal.svg" download>lockup.svg</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:20px">
+      <div class="card wordmark-card">
+        <div class="well-h"><h3>Wordmark</h3><span>drawn · 5.8 stroke · skew −6°</span></div>
+        <svg class="wm-big" viewBox="0 0 275.4 52" aria-label="fullstack wannabe"><use href="#wm"/></svg>
+        <p class="small" style="color:var(--text-2)">One hand, drawn as paths. “wannabe” carries the accent because the ambition is the brand; “fullstack” stays ink so the joke lands second.</p>
+        <div class="wm-scale">
+          <figure><svg style="width:180px;height:34px" viewBox="0 0 275.4 52"><use href="#wm"/></svg><figcaption>40 px</figcaption></figure>
+          <figure><svg style="width:108px;height:20px" viewBox="0 0 275.4 52"><use href="#wm"/></svg><figcaption>24 px</figcaption></figure>
+          <figure><svg style="width:72px;height:14px" viewBox="0 0 275.4 52"><use href="#wm"/></svg><figcaption>16 px</figcaption></figure>
+        </div>
+        <p class="small" style="color:var(--text-2)">Below 16px the hand stops being readable — use the reading face, Instrument Sans 650, and keep the mark beside it.</p>
+      </div>
+
+      <div class="card wordmark-card">
+        <div class="well-h"><h3>The hat</h3><span>one variable, four worlds</span></div>
+        <div class="row" style="gap:14px">
+          <figure style="display:grid;gap:6px;justify-items:center"><svg style="width:74px;height:74px" viewBox="0 0 66 66"><use href="#wanni"/></svg><figcaption class="mono" style="font-size:9px;color:var(--text-2)">LIME</figcaption></figure>
+          <figure style="display:grid;gap:6px;justify-items:center"><svg style="width:74px;height:74px" viewBox="0 0 66 66"><use href="#wanni" style="--hat:#2ED3F0"/></svg><figcaption class="mono" style="font-size:9px;color:var(--text-2)">CYAN</figcaption></figure>
+          <figure style="display:grid;gap:6px;justify-items:center"><svg style="width:74px;height:74px" viewBox="0 0 66 66"><use href="#wanni" style="--hat:#FF4D8D"/></svg><figcaption class="mono" style="font-size:9px;color:var(--text-2)">PINK</figcaption></figure>
+          <figure style="display:grid;gap:6px;justify-items:center"><svg style="width:74px;height:74px" viewBox="0 0 66 66"><use href="#wanni" style="--hat:#6C4BF0"/></svg><figcaption class="mono" style="font-size:9px;color:var(--text-2)">GRAPE</figcaption></figure>
+        </div>
+        <p class="small" style="color:var(--text-2)">The header strip is the only part of the mark that may change colour. In Schema Studio Wanni wears cyan, in the Arena pink, in the Dojo lime, in the Blueprint grape — the same character, dressed for the world it is standing in.</p>
+        <div class="row">
+          <span class="chip chip-cyan"><span class="dot"></span>schema</span>
+          <span class="chip chip-pink"><span class="dot"></span>arena</span>
+          <span class="chip chip-lime"><span class="dot"></span>dojo</span>
+          <span class="chip chip-grape"><span class="dot"></span>blueprint</span>
+        </div>
+        <p class="small" style="color:var(--text-2)">Never tint the body, the face or the edge. One variable or none.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px">
+      <div class="well-h" style="margin-bottom:14px"><h3 style="font-size:15px">Cast drawer</h3><span>6 marks · 1 job each · aria-hidden</span></div>
+      <div class="drawer">
+        <div class="cast-tile" style="grid-column:span 5"><svg viewBox="0 0 64 64"><use href="#spark"/></svg><b>Spark</b><span>XP earned</span></div>
+        <div class="cast-tile" style="grid-column:span 4"><svg viewBox="0 0 64 64"><use href="#bolt"/></svg><b>Bolt</b><span>streak alive</span></div>
+        <div class="cast-tile" style="grid-column:span 3"><svg viewBox="0 0 64 64"><use href="#flag"/></svg><b>Flag</b><span>quest cleared</span></div>
+        <div class="cast-tile" style="grid-column:span 4"><svg viewBox="0 0 64 64"><use href="#dice"/></svg><b>Dice</b><span>roll a challenge</span></div>
+        <div class="cast-tile" style="grid-column:span 4"><svg viewBox="0 0 64 64"><use href="#gem"/></svg><b>Gem</b><span>loot tier</span></div>
+        <div class="cast-tile" style="grid-column:span 4"><svg viewBox="0 0 64 64"><use href="#key"/></svg><b>Key</b><span>unlocked</span></div>
+      </div>
+      <p class="small" style="color:var(--text-2);margin-top:16px;max-width:78ch">The cast is punctuation, not a second logo set. Four to six per composition, never over type, never the only place a fact lives. Each mark takes one of the six world colours; the ink and the cut never change.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 04 colour ══════════════════════════════════════════════════════ -->
+<section id="colour">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>04</b><i></i><b>colour</b></div>
+        <h2 class="display">Six candy,<br>one ink.</h2>
+      </div>
+      <p class="cap">Six candy colours is a decision, not a licence. Each one is a world, a state or a reward — and none of them is ever body text. Structure is ink on paper; colour marks what changed.</p>
+    </div>
+
+    <div class="swatches" style="margin-bottom:26px">
+      <div class="sw"><div class="chipbox" style="background:var(--ink);color:var(--paper)">Aa</div><div class="meta"><b>Ink</b><code>#1B1626 · 16.45:1</code></div></div>
+      <div class="sw"><div class="chipbox" style="background:var(--paper);color:var(--ink)">Aa</div><div class="meta"><b>Paper</b><code>#FFF6E5 · ground</code></div></div>
+      <div class="sw"><div class="chipbox" style="background:var(--lime);color:var(--ink)">Aa</div><div class="meta"><b>Lime</b><code>#C6F24E · brand + dojo</code></div></div>
+      <div class="sw"><div class="chipbox" style="background:var(--pink);color:var(--ink)">Aa</div><div class="meta"><b>Pink</b><code>#FF4D8D · arena</code></div></div>
+      <div class="sw"><div class="chipbox" style="background:var(--cyan);color:var(--ink)">Aa</div><div class="meta"><b>Cyan</b><code>#2ED3F0 · schema</code></div></div>
+      <div class="sw"><div class="chipbox" style="background:var(--grape);color:#FFF6E5">Aa</div><div class="meta"><b>Grape</b><code>#6C4BF0 · blueprint</code></div></div>
+      <div class="sw"><div class="chipbox" style="background:var(--mango);color:var(--ink)">Aa</div><div class="meta"><b>Mango</b><code>#FFB020 · xp</code></div></div>
+      <div class="sw"><div class="chipbox" style="background:var(--mint);color:var(--ink)">Aa</div><div class="meta"><b>Mint</b><code>#2ED3A6 · success</code></div></div>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden">
+      <table>
+        <thead><tr><th>Pair</th><th>Use</th><th>Ratio</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td>Ink on paper</td><td>Body, headings, edges</td><td class="num">16.45:1</td><td><span class="chip chip-lime" style="font-size:9px;padding:3px 8px">AAA</span></td></tr>
+          <tr><td>Ink on lime</td><td>Primary button</td><td class="num">13.63:1</td><td><span class="chip chip-lime" style="font-size:9px;padding:3px 8px">AAA</span></td></tr>
+          <tr><td>Ink on cyan</td><td>Node headers</td><td class="num">9.83:1</td><td><span class="chip chip-lime" style="font-size:9px;padding:3px 8px">AAA</span></td></tr>
+          <tr><td>Ink on mango</td><td>XP, badges</td><td class="num">9.65:1</td><td><span class="chip chip-lime" style="font-size:9px;padding:3px 8px">AAA</span></td></tr>
+          <tr><td>Ink on pink</td><td>Arena labels</td><td class="num">5.63:1</td><td><span class="chip chip-lime" style="font-size:9px;padding:3px 8px">AA</span></td></tr>
+          <tr><td>Cream on grape</td><td>Blueprint panels</td><td class="num">5.01:1</td><td><span class="chip chip-lime" style="font-size:9px;padding:3px 8px">AA</span></td></tr>
+          <tr><td>Ink on grape</td><td><b>Banned</b> — labels only</td><td class="num">3.28:1</td><td><span class="chip chip-pink" style="font-size:9px;padding:3px 8px">FAIL</span></td></tr>
+          <tr><td>Cream on pink</td><td><b>Banned</b> — use ink</td><td class="num">2.92:1</td><td><span class="chip chip-pink" style="font-size:9px;padding:3px 8px">FAIL</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid g4" style="margin-top:22px">
+      <div class="well" style="gap:10px"><div class="well-h"><h3>Schema Studio</h3></div><div style="height:14px;border-radius:5px;background:var(--cyan);border:2px solid var(--edge)"></div><p class="small" style="color:var(--text-2)">Cyan: the canvas, the node header, the DDL panel. The colour of the thing you draw first.</p></div>
+      <div class="well" style="gap:10px"><div class="well-h"><h3>Query Arena</h3></div><div style="height:14px;border-radius:5px;background:var(--pink);border:2px solid var(--edge)"></div><p class="small" style="color:var(--text-2)">Pink: quest chips, the world rail, a passing result. Loud on purpose — it is the boss room.</p></div>
+      <div class="well" style="gap:10px"><div class="well-h"><h3>Polyglot Dojo</h3></div><div style="height:14px;border-radius:5px;background:var(--lime);border:2px solid var(--edge)"></div><p class="small" style="color:var(--text-2)">Lime: the brand colour, and the dojo. Passing code, the run button, the streak.</p></div>
+      <div class="well" style="gap:10px"><div class="well-h"><h3>API Blueprint</h3></div><div style="height:14px;border-radius:5px;background:var(--grape);border:2px solid var(--edge)"></div><p class="small" style="color:var(--text-2)">Grape: the six layers, the request trace, the mock server. The deepest world, the darkest fill.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 05 type ════════════════════════════════════════════════════════ -->
+<section id="type">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>05</b><i></i><b>type</b></div>
+        <h2 class="display">Three voices:<br>name, sentence, fact.</h2>
+      </div>
+      <p class="cap">Display for names and numbers, reading for sentences, mono for anything a machine produced. No fourth family — the playfulness comes from colour and shape, not from a novelty font.</p>
+    </div>
+
+    <div class="grid" style="gap:20px">
+      <div class="card pad" style="display:grid;grid-template-columns:220px 1fr;gap:30px;align-items:center">
+        <div>
+          <p class="eyebrow" style="margin-bottom:8px">display</p>
+          <p style="font-family:'Bricolage Grotesque';font-weight:700;font-size:15px;letter-spacing:-.02em">Bricolage Grotesque</p>
+          <p class="small" style="color:var(--text-2)">700 · −0.035em · 0.98 line-height</p>
+        </div>
+        <p class="display" style="font-size:clamp(28px,3.4vw,42px)">Design the schema. Then earn the API.</p>
+      </div>
+      <div class="card pad" style="display:grid;grid-template-columns:220px 1fr;gap:30px;align-items:center">
+        <div>
+          <p class="eyebrow" style="margin-bottom:8px">reading</p>
+          <p style="font-family:'Instrument Sans';font-weight:600;font-size:15px">Instrument Sans</p>
+          <p class="small" style="color:var(--text-2)">400–650 · 17px · 1.6</p>
+        </div>
+        <p style="font-size:17px;max-width:62ch">Four modules chain into one workflow: draw the tables, seed them, interrogate them with SQL, then rebuild the backend around them in Go, TypeScript or PHP. Every answer is checked against real output, not a string match.</p>
+      </div>
+      <div class="card pad" style="display:grid;grid-template-columns:220px 1fr;gap:30px;align-items:center">
+        <div>
+          <p class="eyebrow" style="margin-bottom:8px">fact</p>
+          <p style="font-family:'JetBrains Mono';font-weight:500;font-size:15px">JetBrains Mono</p>
+          <p class="small" style="color:var(--text-2)">400–700 · tabular · .13em caps</p>
+        </div>
+        <p class="mono" style="font-size:13px;line-height:1.9">SELECT c.name, SUM(o.total) AS spend<br>FROM customers c JOIN orders o ON o.customer_id = c.id<br>GROUP BY c.name HAVING spend &gt; 500;</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;padding:0;overflow:hidden">
+      <table>
+        <thead><tr><th>Token</th><th>Size</th><th>Weight</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td class="num">--t-hero</td><td class="num">clamp(46 → 82)</td><td class="num">700</td><td>One per page. Never two.</td></tr>
+          <tr><td class="num">--t-h2</td><td class="num">30 → 46</td><td class="num">700</td><td>Section titles</td></tr>
+          <tr><td class="num">--t-h3</td><td class="num">19</td><td class="num">700</td><td>Card titles</td></tr>
+          <tr><td class="num">--t-body</td><td class="num">17 / 1.6</td><td class="num">400</td><td>Everything readable</td></tr>
+          <tr><td class="num">--t-small</td><td class="num">14 / 1.5</td><td class="num">400</td><td>Captions, hints</td></tr>
+          <tr><td class="num">--t-label</td><td class="num">10.5 · .13em</td><td class="num">500</td><td>Mono, uppercase, machine facts</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 06 parts ═══════════════════════════════════════════════════════ -->
+<section id="parts">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>06</b><i></i><b>parts</b></div>
+        <h2 class="display">Same edge<br>as the mark.</h2>
+      </div>
+      <p class="cap">Every component is cut from the sheet: 2.5px edge, one fill, a hard offset, a 12–18px radius. The node card is the one to copy — it is the product's own object.</p>
+    </div>
+
+    <div class="grid g2">
+      <div class="well">
+        <div class="well-h"><h3>Buttons</h3><span>4 variants</span></div>
+        <div class="row">
+          <button class="btn btn-primary">Run query</button>
+          <button class="btn">Copy DDL</button>
+          <button class="btn btn-grape">Deploy mock</button>
+          <button class="btn" style="background:var(--chili);color:var(--on-danger)">Reset all</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-sm btn-primary">Small</button>
+          <button class="btn btn-quiet">Quiet link →</button>
+        </div>
+        <p class="small" style="color:var(--text-2)">One primary per view. Grape is for the blueprint's destructive-ish actions, chili only for irreversible ones.</p>
+      </div>
+
+      <div class="well">
+        <div class="well-h"><h3>Chips</h3><span>world + state</span></div>
+        <div class="row">
+          <span class="chip chip-cyan"><span class="dot"></span>schema</span>
+          <span class="chip chip-pink"><span class="dot"></span>arena</span>
+          <span class="chip chip-lime"><span class="dot"></span>dojo</span>
+          <span class="chip chip-grape"><span class="dot"></span>blueprint</span>
+          <span class="chip chip-mango"><span class="dot"></span>+30 xp</span>
+          <span class="chip"><span class="dot"></span>hard</span>
+        </div>
+        <p class="small" style="color:var(--text-2)">A chip is a label, never a button. If it clicks, it is a button and it needs the offset.</p>
+        <div class="row" style="margin-top:6px">
+          <span class="chip" style="border-style:dashed">locked</span>
+          <span class="chip" style="background:var(--mint)">solved</span>
+          <span class="chip" style="background:var(--chili);color:var(--on-danger)">failing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:20px">
+      <div class="node">
+        <div class="node-head"><span>orders</span><span>1.2k rows</span></div>
+        <div class="node-row"><span class="pk">PK</span> id <span class="type">int</span></div>
+        <div class="node-row"><span class="pk" style="color:var(--cyan)">FK</span> customer_id <span class="type">int</span></div>
+        <div class="node-row"> total <span class="type">numeric</span></div>
+        <div class="node-row"> created_at <span class="type">timestamp</span></div>
+      </div>
+      <div class="card pad" style="display:grid;gap:14px;align-content:start">
+        <div class="well-h"><h3>Level 7</h3><span class="mono" style="font-size:11px;color:var(--text-2)">Curious Intern</span></div>
+        <div class="meter lime"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        <p class="small" style="color:var(--text-2)"><b class="mono">420</b> / 700 XP to Schema Tinkerer</p>
+        <div class="row" style="gap:8px">
+          <svg style="width:26px;height:26px" viewBox="0 0 64 64"><use href="#spark"/></svg>
+          <span class="small">+30 XP for the join quest</span>
+        </div>
+      </div>
+      <div class="card pad" style="display:grid;gap:12px;align-content:start">
+        <div class="well-h"><h3>Badges</h3><span>2 of 7</span></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+          <div class="badge earned"><svg viewBox="0 0 64 64"><use href="#flag"/></svg><b>First Blood</b><span>earned</span></div>
+          <div class="badge locked"><svg viewBox="0 0 64 64" style="opacity:.5"><use href="#gem"/></svg><b>Join Master</b><span>world 4</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;padding:26px;display:grid;gap:18px">
+      <div class="well-h"><h3>Quest row</h3><span>the workhorse</span></div>
+      <div style="border:var(--edge-w) solid var(--edge);border-radius:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:2px solid var(--line)">
+          <span class="mono" style="font-size:11px;color:var(--text-2);width:26px">01</span>
+          <b style="font-size:15px">Every customer</b>
+          <span class="chip chip-pink" style="margin-left:auto;font-size:9px;padding:3px 9px">world 1</span>
+          <span class="mono" style="font-size:11px;color:var(--text-2)">+30 XP</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:color-mix(in srgb,var(--mint) 18%,transparent)">
+          <span class="mono" style="font-size:11px;color:var(--text-2);width:26px">02</span>
+          <b style="font-size:15px">Top spenders</b>
+          <span class="chip" style="margin-left:auto;background:var(--mint);font-size:9px;padding:3px 9px">solved</span>
+          <span class="mono" style="font-size:11px;color:var(--text-2)">+35 XP</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-top:2px solid var(--line);opacity:.55">
+          <span class="mono" style="font-size:11px;color:var(--text-2);width:26px">03</span>
+          <b style="font-size:15px">Retention window</b>
+          <span class="chip" style="margin-left:auto;border-style:dashed;font-size:9px;padding:3px 9px">locked</span>
+          <span class="mono" style="font-size:11px;color:var(--text-2)">+60 XP</span>
+        </div>
+      </div>
+      <p class="small" style="color:var(--text-2)">Solved rows are tinted, never struck through. Locked rows dim but keep their text at 4.5:1 — a lock is not an excuse to make the label unreadable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 07 forms ═══════════════════════════════════════════════════════ -->
+<section id="forms">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>07</b><i></i><b>forms</b></div>
+        <h2 class="display">A field is cut from<br>the same sheet.</h2>
+      </div>
+      <p class="cap">The field keeps the edge and the offset, so focus reads as the field being pressed rather than lit. Errors add colour and an icon — never colour alone.</p>
+    </div>
+
+    <div class="grid g2">
+      <div class="card pad" style="display:grid;gap:18px">
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input class="input" id="f-email" type="email" value="ada@example.com">
+          <span class="hint">We only use this to keep your streak.</span>
+        </div>
+        <div class="field">
+          <label for="f-err">Handle</label>
+          <input class="input" id="f-err" type="text" value="ada w" aria-invalid="true" aria-describedby="e-err">
+          <span class="err" id="e-err">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 8v5M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+            No spaces — try ada_w
+          </span>
+        </div>
+        <div class="field">
+          <label for="f-dis">Schema name</label>
+          <input class="input" id="f-dis" type="text" value="shop_prod" disabled>
+          <span class="hint">Locked after the first seed.</span>
+        </div>
+        <div class="field">
+          <label for="f-ok">Saved query name</label>
+          <input class="input" id="f-ok" type="text" value="top_spenders" style="border-color:var(--mint);box-shadow:3px 3px 0 var(--mint)">
+          <span class="hint" style="color:var(--mint);font-weight:600">Saved. It is in the arena now.</span>
+        </div>
+      </div>
+
+      <div class="card pad" style="display:grid;gap:20px;align-content:start">
+        <div class="field">
+          <span class="eyebrow">Difficulty</span>
+          <label class="radio"><input type="radio" name="d" checked> Easy — 35 XP</label>
+          <label class="radio"><input type="radio" name="d"> Medium — 60 XP</label>
+          <label class="radio"><input type="radio" name="d"> Hard — 100 XP</label>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:16px;border-top:2px dashed var(--hair)">
+          <div>
+            <p style="font-weight:650;font-size:15px">Hard mode only</p>
+            <p class="small" style="color:var(--text-2)">Skips the hints and halves the timer.</p>
+          </div>
+          <button class="switch" role="switch" aria-checked="true" aria-label="Hard mode only"></button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+          <div>
+            <p style="font-weight:650;font-size:15px">Sound</p>
+            <p class="small" style="color:var(--text-2)">Level-up chime, nothing else.</p>
+          </div>
+          <button class="switch" role="switch" aria-checked="false" aria-label="Sound"></button>
+        </div>
+        <div class="field">
+          <label for="f-file">Import a .sql file</label>
+          <input class="input" id="f-file" type="file" style="padding:9px 12px;font-size:14px">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 08 decoration ══════════════════════════════════════════════════ -->
+<section id="decor">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>08</b><i></i><b>decoration</b></div>
+        <h2 class="display">The fun is<br>a layer, not a font.</h2>
+      </div>
+      <p class="cap">Four decorations, each with a job and a limit. They sit behind content, never in it, and they never carry a fact. If a decoration can be mistaken for data, it is deleted.</p>
+    </div>
+
+    <div class="grid g2">
+      <div class="deco-tile" style="min-height:190px">
+        <div style="position:absolute;inset:0;background-image:radial-gradient(var(--edge) 1.4px,transparent 1.4px);background-size:11px 11px;opacity:.18"></div>
+        <svg style="position:absolute;left:50%;top:44%;translate:-50% -50%;width:88px;height:88px" viewBox="0 0 66 66"><use href="#wanni"/></svg>
+        <span class="label">01 · halftone field — behind a hero, never behind a table</span>
+      </div>
+      <div class="deco-tile" style="min-height:190px">
+        <span class="conf" style="left:12%;top:18%;width:22px;height:8px;background:var(--pink);rotate:22deg"></span>
+        <span class="conf" style="left:38%;top:64%;width:18px;height:8px;background:var(--cyan);rotate:-30deg"></span>
+        <span class="conf" style="left:68%;top:24%;width:20px;height:8px;background:var(--lime);rotate:48deg"></span>
+        <span class="conf" style="left:82%;top:70%;width:16px;height:8px;background:var(--mango);rotate:-12deg"></span>
+        <span class="conf" style="left:22%;top:78%;width:10px;height:10px;border-radius:50%;background:var(--grape)"></span>
+        <span class="conf" style="left:56%;top:12%;width:9px;height:9px;border-radius:50%;background:var(--mint)"></span>
+        <span class="label">02 · confetti — celebration only, max 8 pieces</span>
+      </div>
+      <div class="deco-tile" style="min-height:190px;display:grid;place-items:center">
+        <svg width="80%" height="120" viewBox="0 0 320 120" aria-hidden="true">
+          <path class="route" d="M20 90 Q80 20 140 70 T260 40 L300 62"/>
+          <circle cx="20" cy="90" r="9" fill="var(--cyan)" stroke="var(--edge)" stroke-width="3"/>
+          <circle cx="140" cy="70" r="9" fill="var(--lime)" stroke="var(--edge)" stroke-width="3"/>
+          <circle cx="260" cy="40" r="9" fill="var(--mango)" stroke="var(--edge)" stroke-width="3"/>
+          <circle cx="300" cy="62" r="12" fill="var(--pink)" stroke="var(--edge)" stroke-width="3"/>
+        </svg>
+        <span class="label">03 · quest route — progress maps only</span>
+      </div>
+      <div class="deco-tile" style="min-height:190px;display:grid;place-items:center;gap:10px">
+        <p class="display" style="font-size:34px;position:relative">world four
+          <svg style="position:absolute;left:-2px;bottom:-4px;width:calc(100% + 4px);height:12px" viewBox="0 0 200 14" preserveAspectRatio="none"><path class="squiggle" d="M2 8 Q14 2 26 8 T50 8 T74 8 T98 8 T122 8 T146 8 T170 8 T194 8"/></svg>
+        </p>
+        <span class="label">04 · squiggle underline — one per view</span>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:20px">
+      <div class="card pad">
+        <p class="eyebrow" style="margin-bottom:10px">allowed</p>
+        <ul class="small" style="display:grid;gap:7px;color:var(--text-2)">
+          <li>— Behind a hero, an empty state, or a completion screen.</li>
+          <li>— Rotated stickers between −3° and +3°, never on text.</li>
+          <li>— As the background of a full-bleed section, at 18% opacity or less.</li>
+        </ul>
+      </div>
+      <div class="card pad">
+        <p class="eyebrow" style="margin-bottom:10px">banned</p>
+        <ul class="small" style="display:grid;gap:7px;color:var(--text-2)">
+          <li>— Behind a data table, an editor, or a chart.</li>
+          <li>— Inside a form field or a focus ring.</li>
+          <li>— Animated on loop while the user is reading code.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 09 motion ══════════════════════════════════════════════════════ -->
+<section id="motion">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>09</b><i></i><b>motion</b></div>
+        <h2 class="display">One ease,<br>three durations.</h2>
+      </div>
+      <p class="cap">Things arrive with a small overshoot and leave without one. Nothing loops, nothing floats while you read, and every animation has a finished still.</p>
+    </div>
+    <div class="grid g3">
+      <div class="well"><div class="well-h"><h3>90ms</h3><span>press</span></div><p class="small" style="color:var(--text-2)">The button travels into its shadow. Instant feedback, no easing curve needed.</p></div>
+      <div class="well"><div class="well-h"><h3>180ms</h3><span>pop</span></div><p class="small" style="color:var(--text-2)">Menus, chips, theme changes. <span class="mono" style="font-size:11px">cubic-bezier(.34,1.56,.64,1)</span> — 12% overshoot, then settle.</p></div>
+      <div class="well"><div class="well-h"><h3>420ms</h3><span>celebrate</span></div><p class="small" style="color:var(--text-2)">XP meter fill and confetti. Runs once per win, never on load.</p></div>
+    </div>
+    <div class="card" style="margin-top:20px;padding:26px;display:flex;gap:22px;align-items:center;flex-wrap:wrap">
+      <div class="meter pink" style="max-width:320px"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <p class="small" style="color:var(--text-2);max-width:52ch">The meter is eight segments, not a smooth bar. Segments are countable, and countable progress is the entire point of a game.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 voice ═══════════════════════════════════════════════════════ -->
+<section id="voice">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>10</b><i></i><b>voice</b></div>
+        <h2 class="display">Plain, specific,<br>second person.</h2>
+      </div>
+      <p class="cap">The brand is confident about the work and modest about itself. The joke is in the name, so the copy does not need to make it again.</p>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table>
+        <thead><tr><th style="width:20%">Moment</th><th style="width:40%">Say</th><th style="width:40%">Don't say</th></tr></thead>
+        <tbody>
+          <tr><td>Headline</td><td>Design the schema. Then earn the API.</td><td>Level up your fullstack journey today!!</td></tr>
+          <tr><td>Success</td><td>Saved. It is in the arena now.</td><td>Awesome! Your query has been successfully saved!</td></tr>
+          <tr><td>Error</td><td>No spaces — try ada_w</td><td>Oops! Something went wrong.</td></tr>
+          <tr><td>Empty state</td><td>No tables yet. Draw one, or load the shop example.</td><td>Nothing to see here!</td></tr>
+          <tr><td>Locked</td><td>Clear world 4 to open this.</td><td>You must unlock this feature first.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 tokens ══════════════════════════════════════════════════════ -->
+<section id="tokens">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>11</b><i></i><b>tokens</b></div>
+        <h2 class="display">Copy this.<br>Do not hand-edit it.</h2>
+      </div>
+      <p class="cap">One source, two themes. The edge flips with the theme so the outline never disappears; the offset deepens instead of blurring. Files: <span class="mono" style="font-size:12px">wannabe-tokens.css</span> · <span class="mono" style="font-size:12px">tokens.json</span>.</p>
+    </div>
+<pre><span class="c">/* brand primitives — never referenced by a component */</span>
+<span class="k">--wb-ink</span>: <span class="v">#1B1626</span>;  <span class="k">--wb-paper</span>: <span class="v">#FFF6E5</span>;  <span class="k">--wb-card</span>: <span class="v">#FFFDF7</span>;
+<span class="k">--wb-lime</span>: <span class="v">#C6F24E</span>; <span class="k">--wb-pink</span>: <span class="v">#FF4D8D</span>;  <span class="k">--wb-cyan</span>: <span class="v">#2ED3F0</span>;
+<span class="k">--wb-grape</span>: <span class="v">#6C4BF0</span>; <span class="k">--wb-mango</span>: <span class="v">#FFB020</span>; <span class="k">--wb-mint</span>: <span class="v">#2ED3A6</span>;
+<span class="k">--wb-chili</span>: <span class="v">#DC1F2C</span>;
+
+<span class="c">/* semantic — this is what components read */</span>
+<span class="k">--surface</span>: <span class="v">var(--wb-card)</span>;
+<span class="k">--ground</span>: <span class="v">var(--wb-paper)</span>;
+<span class="k">--text</span>: <span class="v">var(--wb-ink)</span>;
+<span class="k">--edge</span>: <span class="v">var(--wb-ink)</span>;      <span class="c">/* flips to paper in dark */</span>
+<span class="k">--offset</span>: <span class="v">var(--wb-ink)</span>;    <span class="c">/* flips to #0B0813 in dark */</span>
+<span class="k">--brand</span>: <span class="v">var(--wb-lime)</span>;
+<span class="k">--world-schema</span>: <span class="v">var(--wb-cyan)</span>;
+<span class="k">--world-arena</span>: <span class="v">var(--wb-pink)</span>;
+<span class="k">--world-dojo</span>: <span class="v">var(--wb-lime)</span>;
+<span class="k">--world-blueprint</span>: <span class="v">var(--wb-grape)</span>;
+<span class="k">--reward</span>: <span class="v">var(--wb-mango)</span>;
+<span class="k">--success</span>: <span class="v">var(--wb-mint)</span>;
+<span class="k">--danger</span>: <span class="v">var(--wb-chili)</span>;
+
+<span class="c">/* geometry — the material */</span>
+<span class="k">--edge-w</span>: <span class="v">2.5px</span>;  <span class="k">--offset-y</span>: <span class="v">4px</span>;
+<span class="k">--r-sm</span>: <span class="v">8px</span>; <span class="k">--r-md</span>: <span class="v">12px</span>; <span class="k">--r-lg</span>: <span class="v">18px</span>; <span class="k">--r-xl</span>: <span class="v">26px</span>;
+
+<span class="c">/* motion */</span>
+<span class="k">--pop</span>: <span class="v">cubic-bezier(.34,1.56,.64,1)</span>;
+<span class="k">--t-press</span>: <span class="v">90ms</span>; <span class="k">--t-pop</span>: <span class="v">180ms</span>; <span class="k">--t-celebrate</span>: <span class="v">420ms</span>;</pre>
+  </div>
+</section>
+
+<!-- ══ 12 audit ═══════════════════════════════════════════════════════ -->
+<section id="audit">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num"><b>12</b><i></i><b>audit</b></div>
+        <h2 class="display">What is proven,<br>and what is not.</h2>
+      </div>
+      <p class="cap">Every claim above points at a file or a measurement. Anything I could not check is listed as not verified rather than quietly implied.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card" style="padding:0;overflow:hidden">
+        <table>
+          <thead><tr><th>Check</th><th>Evidence</th></tr></thead>
+          <tbody>
+            <tr><td>Mark reads at 16px</td><td class="num">mark-compact.svg · sheet.html</td></tr>
+            <tr><td>Wordmark is paths, no text</td><td class="num">wordmark.svg · 0 &lt;text&gt;</td></tr>
+            <tr><td>Cast has 6 marks, 1 job each</td><td class="num">cast/*.svg</td></tr>
+            <tr><td>Ink on paper 16.45:1</td><td class="num">computed</td></tr>
+            <tr><td>Ink on lime 13.63:1</td><td class="num">computed</td></tr>
+            <tr><td>Body text never on grape</td><td class="num">3.28:1 → banned</td></tr>
+            <tr><td>No gradient in any mark</td><td class="num">grep: 0 matches</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card pad">
+        <p class="eyebrow" style="margin-bottom:12px">not verified</p>
+        <ul class="small" style="display:grid;gap:9px;color:var(--text-2)">
+          <li>— The cast has no animated idle state; motion is specified, not built.</li>
+          <li>— Dark-mode field contrast was measured on paper, not on <span class="mono" style="font-size:11px">#241B36</span>.</li>
+          <li>— The 16px favicon is drawn, not printed; ink-on-paper test still to do.</li>
+          <li>— Nothing is applied to the app shell yet. This is the kit, not the product.</li>
+        </ul>
+        <a class="btn btn-sm" href="../public/brand/wannabe/sheet.html" style="margin-top:16px">Open the mark sheet</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>
+      <svg style="width:150px;height:auto" viewBox="0 0 355 66" aria-label="fullstack wannabe"><use href="#wanni" width="66" height="66"/><use href="#wm" x="76" y="7" width="275.4" height="52"/></svg>
+      <p class="mono" style="margin-top:14px">brand system v1.0 · 2026 · schema → query → code</p>
+    </div>
+    <p class="mono">6 cast · 6 candy · 1 edge</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const btn = document.querySelector('[data-toggle]');
+  let saved = null;
+  try { saved = localStorage.getItem('wanni:theme'); } catch {}
+  if (saved) { root.dataset.theme = saved; btn.setAttribute('aria-pressed', String(saved === 'dark')); }
+  btn.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    btn.setAttribute('aria-pressed', String(next === 'dark'));
+    try { localStorage.setItem('wanni:theme', next); } catch {}
+  });
+})();
+</script>
+</body>
+</html>

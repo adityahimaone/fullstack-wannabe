@@ -2,7 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppShell } from '@/components/layout/AppShell';
 import { ErdProvider } from '@/modules/erd/store';
-import { Skeleton } from '@/components/ui/skeleton';
+import { WanniMark } from '@/components/brand/marks';
 
 const Dashboard = lazy(() => import('@/pages/Dashboard').then((m) => ({ default: m.Dashboard })));
 const ErdPage = lazy(() => import('@/modules/erd/ErdPage').then((m) => ({ default: m.ErdPage })));
@@ -11,18 +11,26 @@ const DojoPage = lazy(() => import('@/modules/dojo/DojoPage').then((m) => ({ def
 const BlueprintPage = lazy(() =>
   import('@/modules/blueprint/BlueprintPage').then((m) => ({ default: m.BlueprintPage })),
 );
+const DesignSystem = lazy(() =>
+  import('@/pages/DesignSystem').then((m) => ({ default: m.DesignSystem })),
+);
 
-function Loading() {
+/**
+ * Cold boot only. Every route boundary lives in AppShell, so this one fires
+ * only if a provider (not a page) suspends — i.e. essentially never. It is
+ * centred and full-bleed on purpose: a page skeleton rendered outside the
+ * shell is what produced the original "no outer margin" bug.
+ */
+function BootSplash() {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Skeleton className="h-3 w-32" />
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-3 w-full max-w-lg" />
-      </div>
-      <div className="grid gap-3 lg:grid-cols-[1fr_360px]">
-        <Skeleton className="h-[60vh] min-h-[420px]" />
-        <Skeleton className="hidden h-[60vh] lg:block" />
+    <div className="grid min-h-dvh place-items-center bg-background p-6">
+      <div className="flex flex-col items-center gap-4">
+        <div className="animate-bob">
+          <WanniMark size={64} />
+        </div>
+        <p className="font-mono text-2xs uppercase tracking-[0.22em] text-muted-foreground">
+          fullstack wannabe
+        </p>
       </div>
     </div>
   );
@@ -31,7 +39,7 @@ function Loading() {
 export default function App() {
   return (
     <ErdProvider>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<BootSplash />}>
         <Routes>
           <Route element={<AppShell />}>
             <Route index element={<Dashboard />} />
@@ -39,6 +47,7 @@ export default function App() {
             <Route path="sql" element={<SqlPage />} />
             <Route path="dojo" element={<DojoPage />} />
             <Route path="blueprint" element={<BlueprintPage />} />
+            <Route path="design-system" element={<DesignSystem />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

@@ -6,6 +6,7 @@ import {
   SquareTerminal,
   type LucideIcon,
 } from 'lucide-react';
+import type { World } from '@/lib/world';
 
 export interface NavItem {
   to: string;
@@ -14,6 +15,8 @@ export interface NavItem {
   code: string;
   icon: LucideIcon;
   blurb: string;
+  /** Which colour the mark wears while you are in this module. */
+  world: World;
 }
 
 export const NAV_ITEMS: NavItem[] = [
@@ -24,6 +27,7 @@ export const NAV_ITEMS: NavItem[] = [
     code: '00',
     icon: LayoutDashboard,
     blurb: 'Progress, badges, and the route ahead.',
+    world: 'home',
   },
   {
     to: '/erd',
@@ -32,6 +36,7 @@ export const NAV_ITEMS: NavItem[] = [
     code: '01',
     icon: Boxes,
     blurb: 'Draw entities, wire relations, watch DDL compile.',
+    world: 'schema',
   },
   {
     to: '/sql',
@@ -40,6 +45,7 @@ export const NAV_ITEMS: NavItem[] = [
     code: '02',
     icon: SquareTerminal,
     blurb: 'Five worlds of quests against live data.',
+    world: 'arena',
   },
   {
     to: '/dojo',
@@ -48,6 +54,7 @@ export const NAV_ITEMS: NavItem[] = [
     code: '03',
     icon: Braces,
     blurb: 'Maps, arrays, types, collections — by hand.',
+    world: 'dojo',
   },
   {
     to: '/blueprint',
@@ -56,5 +63,6 @@ export const NAV_ITEMS: NavItem[] = [
     code: '04',
     icon: Network,
     blurb: 'Six layers from migration to router.',
+    world: 'blueprint',
   },
 ];

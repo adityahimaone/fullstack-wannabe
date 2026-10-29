@@ -32,9 +32,17 @@ const VARIANT_ICON: Record<ToastVariant, React.ComponentType<{ className?: strin
 
 const VARIANT_ACCENT: Record<ToastVariant, string> = {
   default: 'text-muted-foreground',
-  success: 'text-lime',
+  success: 'text-mint-ink',
   error: 'text-destructive',
-  xp: 'text-amber',
+  xp: 'text-mango-ink',
+};
+
+/* The edge of the toast carries the state, so the state is not colour-only. */
+const VARIANT_EDGE: Record<ToastVariant, string> = {
+  default: 'border-edge',
+  success: 'border-mint',
+  error: 'border-destructive',
+  xp: 'border-mango',
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -78,8 +86,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 exit={{ opacity: 0, y: 6, scale: 0.98 }}
                 transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                 className={cn(
-                  'pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-md border bg-popover/95 p-3 pr-2 shadow-xl shadow-black/40 backdrop-blur',
-                  variant === 'xp' ? 'border-amber/40' : 'border-border',
+                  'pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-[14px] border-[2.5px] bg-popover p-3 pr-2 shadow-hard-lg',
+                  VARIANT_EDGE[variant],
                 )}
               >
                 <div className={cn('mt-0.5', VARIANT_ACCENT[variant])}>

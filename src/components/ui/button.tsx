@@ -3,27 +3,49 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
+/**
+ * Buttons are stickers you can push. Two rules from DESIGN.md §1:
+ *   1. one flat fill, a 2.5px ink edge, a hard offset — never a blur
+ *   2. press physics: the button travels *into* its own shadow
+ *
+ * `.press` owns the transform; the shadow distance is re-stated there so
+ * hover can grow the offset to 6px and pressed can collapse it to 0.
+ */
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:translate-y-px',
+  [
+    'relative inline-flex select-none items-center justify-center gap-2 whitespace-nowrap',
+    'rounded-[12px] text-sm font-semibold tracking-[-0.01em]',
+    'disabled:pointer-events-none disabled:opacity-45',
+    '[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  ].join(' '),
   {
     variants: {
       variant: {
-        default:
-          'bg-primary text-primary-foreground shadow-[0_0_0_1px_color-mix(in_oklch,var(--lime)_40%,transparent),0_6px_18px_-10px_var(--lime)] hover:brightness-105',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-muted',
-        outline:
-          'border border-border bg-transparent text-foreground hover:border-muted-foreground/60 hover:bg-elevated',
-        ghost: 'text-muted-foreground hover:bg-elevated hover:text-foreground',
-        destructive: 'bg-destructive text-destructive-foreground hover:brightness-110',
-        link: 'text-primary underline-offset-4 hover:underline',
+        /* Primary is the lime sticker. Text on it is fixed ink — never `ink`,
+           which flips to cream in dark and lands at 1.12:1. */
+        default: 'border-[2.5px] border-edge bg-primary text-primary-foreground press',
+        secondary: 'border-[2.5px] border-edge bg-secondary text-secondary-foreground press-sm',
+        outline: 'border-[2.5px] border-edge bg-card text-foreground press-sm',
+        ghost: 'text-muted-foreground hover:bg-muted hover:text-foreground',
+        destructive:
+          'border-[2.5px] border-edge bg-destructive text-destructive-foreground press',
+        /*
+         * For the night stage. These must be *utilities*, not the `.on-stage`
+         * helper class: `@tailwind utilities` is emitted after components, so
+         * a component-layer colour would lose to `text-primary-foreground`
+         * from the base variant and render ink-on-night (invisible).
+         */
+        stage:
+          'border-[2.5px] border-white/40 bg-transparent text-white press-sm hover:bg-white/10 hover:text-white',
+        link: 'h-auto px-0 text-primary-ink underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-9 px-4',
-        xs: 'h-7 px-2.5 text-xs rounded-sm',
-        sm: 'h-8 px-3 text-[0.8125rem]',
+        xs: 'h-7 rounded-[10px] px-2.5 text-xs',
+        sm: 'h-8 rounded-[10px] px-3 text-[0.8125rem]',
         lg: 'h-11 px-6 text-[0.9375rem]',
-        icon: 'h-9 w-9',
-        'icon-sm': 'h-7 w-7 rounded-sm',
+        icon: 'h-9 w-9 px-0',
+        'icon-sm': 'h-7 w-7 rounded-[10px] px-0',
       },
     },
     defaultVariants: { variant: 'default', size: 'default' },

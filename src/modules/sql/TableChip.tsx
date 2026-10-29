@@ -49,11 +49,11 @@ export function TableChip({ table, onPick }: { table: TableSchema; onPick: () =>
           onFocus={scheduleOpen}
           onBlur={scheduleClose}
           aria-label={`${table.name} — ${table.columns.length} columns, ${table.rows} rows`}
-          className="inline-flex shrink-0 items-center gap-1 rounded-sm border border-border px-1.5 py-0.5 font-mono text-[0.5625rem] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:border-primary/60 focus-visible:text-primary data-[state=open]:border-primary/40 data-[state=open]:text-primary"
+          className="inline-flex shrink-0 items-center gap-1 rounded-sm border border-border px-1.5 py-0.5 font-mono text-[0.5625rem] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary-ink focus-visible:border-primary/60 focus-visible:text-primary-ink data-[state=open]:border-primary/40 data-[state=open]:text-primary-ink"
         >
           <Table2 className="h-2.5 w-2.5" />
           {table.name}
-          <span className="text-muted-foreground/40">{table.rows}</span>
+          <span className="text-tertiary">{table.rows}</span>
         </button>
       </PopoverTrigger>
 
@@ -68,7 +68,7 @@ export function TableChip({ table, onPick }: { table: TableSchema; onPick: () =>
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <div className="flex items-center gap-2 border-b border-border px-2.5 py-2">
-          <Table2 className="h-3 w-3 shrink-0 text-primary" />
+          <Table2 className="h-3 w-3 shrink-0 text-primary-ink" />
           <span className="truncate font-mono text-[0.75rem] text-foreground">{table.name}</span>
           <span className="ml-auto shrink-0 font-mono text-[0.5rem] uppercase tracking-widest text-muted-foreground">
             {table.columns.length} cols · {table.rows} rows
@@ -85,13 +85,13 @@ export function TableChip({ table, onPick }: { table: TableSchema; onPick: () =>
         </ul>
 
         <div className="flex items-center justify-between gap-2 border-t border-border px-2 py-1.5">
-          <span className="font-mono text-[0.5rem] uppercase tracking-widest text-muted-foreground/60">
+          <span className="font-mono text-[0.5rem] uppercase tracking-widest text-tertiary">
             click to query
           </span>
           <button
             type="button"
             onClick={pick}
-            className="inline-flex items-center gap-1 rounded-sm border border-primary/40 bg-primary/10 px-1.5 py-0.5 font-mono text-[0.5rem] uppercase tracking-widest text-primary transition-colors hover:bg-primary/20"
+            className="inline-flex items-center gap-1 rounded-sm border border-primary/40 bg-primary/10 px-1.5 py-0.5 font-mono text-[0.5rem] uppercase tracking-widest text-primary-ink transition-colors hover:bg-primary/20"
           >
             <Play className="h-2.5 w-2.5" />
             SELECT *
@@ -122,31 +122,31 @@ function ColumnRow({ col }: { col: TableColumn }) {
       >
         <span className="flex min-w-0 items-center gap-1">
           {col.pk ? (
-            <KeyRound className="h-2.5 w-2.5 shrink-0 text-lime" />
+            <KeyRound className="h-2.5 w-2.5 shrink-0 text-lime-ink" />
           ) : col.fk ? (
-            <Link2 className="h-2.5 w-2.5 shrink-0 text-violet" />
+            <Link2 className="h-2.5 w-2.5 shrink-0 text-grape-ink" />
           ) : (
             <span className="h-2.5 w-2.5 shrink-0" />
           )}
           <span
             className={cn(
               'truncate font-mono text-[0.6875rem]',
-              col.pk || col.fk ? 'text-foreground' : 'text-foreground/85',
+              col.pk || col.fk ? 'text-foreground' : 'text-foreground',
             )}
           >
             {col.name}
           </span>
-          {copied && <Check className="h-2.5 w-2.5 shrink-0 text-lime" />}
+          {copied && <Check className="h-2.5 w-2.5 shrink-0 text-lime-ink" />}
         </span>
 
         <span className="ml-auto flex shrink-0 items-center gap-1">
           {col.fk && (
-            <span className="inline-flex items-center gap-0.5 font-mono text-[0.5rem] text-violet/90">
+            <span className="inline-flex items-center gap-0.5 font-mono text-[0.5rem] text-grape-ink/90">
               <CornerDownRight className="h-2 w-2" />
               {col.fk.table}
             </span>
           )}
-          <span className="font-mono text-[0.5625rem] uppercase text-muted-foreground/70">{col.type}</span>
+          <span className="font-mono text-[0.5625rem] uppercase text-muted-foreground">{col.type}</span>
           {col.pk && <Marker tone="lime">pk</Marker>}
           {col.autoIncrement && <Marker tone="amber">ai</Marker>}
           {col.unique && <Marker tone="cyan">uq</Marker>}
@@ -162,10 +162,10 @@ function Marker({ children, tone }: { children: React.ReactNode; tone: 'lime' | 
     <span
       className={cn(
         'rounded-[2px] border px-1 font-mono text-[0.5rem] uppercase leading-[1.35] tracking-wider',
-        tone === 'lime' && 'border-lime/30 bg-lime/10 text-lime',
-        tone === 'amber' && 'border-amber/30 bg-amber/10 text-amber',
-        tone === 'cyan' && 'border-cyan/30 bg-cyan/10 text-cyan',
-        tone === 'muted' && 'border-border text-muted-foreground/70',
+        tone === 'lime' && 'border-lime/30 bg-lime/10 text-lime-ink',
+        tone === 'amber' && 'border-amber/30 bg-amber/10 text-mango-ink',
+        tone === 'cyan' && 'border-cyan/30 bg-cyan/10 text-cyan-ink',
+        tone === 'muted' && 'border-border text-muted-foreground',
       )}
     >
       {children}

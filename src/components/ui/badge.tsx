@@ -2,18 +2,32 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
+/**
+ * Badges are chips: a hairline ink edge and a flat tint. The tinted variants
+ * use the *ink* form of each candy for the text, because the bright candy on
+ * cream paper is 1.2–3.6:1 and this is text, not a fill.
+ */
 const badgeVariants = cva(
-  'inline-flex items-center gap-1 rounded-sm border px-1.5 py-0.5 font-mono text-2xs uppercase tracking-[0.1em] transition-colors',
+  [
+    'inline-flex items-center gap-1 rounded-full px-2 py-0.5',
+    'font-mono text-2xs uppercase tracking-[0.09em]',
+    'transition-colors',
+  ].join(' '),
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-primary/15 text-primary',
-        secondary: 'border-transparent bg-secondary text-secondary-foreground',
-        outline: 'border-border text-muted-foreground',
-        lime: 'border-lime/30 bg-lime/10 text-lime',
-        amber: 'border-amber/30 bg-amber/10 text-amber',
-        violet: 'border-violet/30 bg-violet/10 text-violet',
-        destructive: 'border-destructive/35 bg-destructive/10 text-destructive',
+        default: 'border-[1.5px] border-edge bg-primary text-primary-foreground',
+        secondary: 'border-[1.5px] border-edge bg-elevated text-foreground',
+        outline: 'border-[1.5px] border-border text-muted-foreground',
+        lime: 'border-[1.5px] border-primary-ink/35 bg-lime/20 text-primary-ink',
+        amber: 'border-[1.5px] border-reward-ink/35 bg-mango/20 text-mango-ink',
+        violet: 'border-[1.5px] border-violet-ink/35 bg-grape/12 text-grape-ink',
+        /*
+         * `text-destructive` is the FILL colour. On its own 10% tint it lands
+         * at 4.1:1 — close enough to look fine and still fail. The ink form is
+         * the same hue with the lightness pushed until it reads.
+         */
+        destructive: 'border-[1.5px] border-destructive/40 bg-destructive/10 text-danger-ink',
       },
     },
     defaultVariants: { variant: 'default' },

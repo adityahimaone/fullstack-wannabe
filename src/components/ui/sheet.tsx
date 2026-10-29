@@ -15,22 +15,22 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     ref={ref}
-    className={cn('fixed inset-0 z-50 bg-black/70 backdrop-blur-[2px]', className)}
+    className={cn('fixed inset-0 z-50 bg-stage/75', className)}
     {...props}
   />
 ));
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
-  'fixed z-50 flex flex-col gap-3 bg-surface border-border shadow-2xl shadow-black/50 transition-transform duration-300 ease-out-expo',
+  'fixed z-50 flex flex-col gap-3 bg-surface border-edge shadow-2xl transition-transform duration-300 ease-out-expo',
   {
     variants: {
       side: {
-        top: 'inset-x-0 top-0 border-b rounded-b-lg max-h-[85vh]',
+        top: 'inset-x-0 top-0 border-b-[2.5px] rounded-b-lg max-h-[85vh]',
         bottom:
-          'inset-x-0 bottom-0 border-t rounded-t-xl max-h-[88vh] safe-bottom overflow-y-auto',
-        left: 'inset-y-0 left-0 h-full w-[84%] max-w-[340px] border-r',
-        right: 'inset-y-0 right-0 h-full w-[88%] max-w-[420px] border-l',
+          'inset-x-0 bottom-0 border-t-[2.5px] rounded-t-xl max-h-[88vh] safe-bottom overflow-y-auto',
+        left: 'inset-y-0 left-0 h-full w-[84%] max-w-[340px] border-r-[2.5px]',
+        right: 'inset-y-0 right-0 h-full w-[88%] max-w-[420px] border-l-[2.5px]',
       },
     },
     defaultVariants: { side: 'right' },

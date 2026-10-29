@@ -1,31 +1,44 @@
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { WanniMark, WanniWordmark } from '@/components/brand/marks';
+import { WORLD_HAT, useWorld } from '@/lib/world';
 
-export function Logo({ className, showWord = true }: { className?: string; showWord?: boolean }) {
+/**
+ * The mark, wearing the hat of the module you are standing in.
+ *
+ * The header strip is the only thing that changes between worlds — that is
+ * the whole identity in one variable. If you can see which colour Wanni is
+ * wearing, you know where you are.
+ */
+export function Logo({
+  className,
+  showWord = true,
+  world,
+}: {
+  className?: string;
+  showWord?: boolean;
+  world?: keyof typeof WORLD_HAT;
+}) {
+  const routeWorld = useWorld();
+  const w = world ?? routeWorld;
+
   return (
-    <div className={cn('flex items-center gap-2.5', className)}>
-      <div className="relative grid h-8 w-8 shrink-0 place-items-center rounded-[7px] border border-border bg-elevated">
-        <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
-          <path
-            d="M6 5h5.5a7 7 0 0 1 0 14H6V5Z"
-            fill="none"
-            stroke="var(--lime)"
-            strokeWidth="2"
-            strokeLinejoin="round"
-          />
-          <path d="M6 12h5.5" stroke="var(--lime)" strokeWidth="2" />
-        </svg>
-        <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-amber" />
-      </div>
+    <Link
+      to="/"
+      aria-label="fullstack wannabe — home"
+      className={cn('group flex min-w-0 items-center gap-2.5', className)}
+    >
+      <span className="shrink-0 transition-transform duration-300 ease-pop group-hover:-rotate-6">
+        <WanniMark size={showWord ? 34 : 30} hat={WORLD_HAT[w]} />
+      </span>
       {showWord && (
-        <div className="min-w-0 leading-none">
-          <div className="display truncate text-[0.9375rem] leading-none tracking-tight">
-            fullstack <span className="text-primary">wannabe</span>
-          </div>
-          <div className="mt-1 truncate font-mono text-[0.5rem] uppercase tracking-[0.16em] text-muted-foreground">
+        <span className="min-w-0 leading-none">
+          <WanniWordmark height={18} className="block max-w-full" />
+          <span className="mt-1.5 block truncate font-mono text-[0.5rem] uppercase tracking-[0.18em] text-muted-foreground">
             schema → api
-          </div>
-        </div>
+          </span>
+        </span>
       )}
-    </div>
+    </Link>
   );
 }

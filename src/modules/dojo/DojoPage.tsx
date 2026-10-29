@@ -40,9 +40,9 @@ interface Outcome {
 }
 
 const DIFFICULTY_STYLE: Record<Difficulty, { text: string; badge: 'outline' | 'amber' | 'violet'; bar: string }> = {
-  easy: { text: 'text-lime', badge: 'outline', bar: 'bg-lime' },
-  medium: { text: 'text-amber', badge: 'amber', bar: 'bg-amber' },
-  hard: { text: 'text-violet', badge: 'violet', bar: 'bg-violet' },
+  easy: { text: 'text-lime-ink', badge: 'outline', bar: 'bg-lime' },
+  medium: { text: 'text-mango-ink', badge: 'amber', bar: 'bg-amber' },
+  hard: { text: 'text-grape-ink', badge: 'violet', bar: 'bg-violet' },
 };
 
 function DifficultyPips({ pips, className }: { pips: number; className?: string }) {
@@ -208,14 +208,14 @@ export function DojoPage() {
               'flex items-center justify-center gap-1 rounded-sm border px-1 py-1 font-mono text-[0.5625rem] uppercase tracking-wider transition-colors',
               active
                 ? d.id === 'all'
-                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  ? 'border-primary/50 bg-primary/10 text-primary-ink'
                   : cn('border-current/40 bg-current/10', DIFFICULTY_STYLE[d.id].text)
                 : 'border-border text-muted-foreground hover:text-foreground',
             )}
           >
             {d.id !== 'all' && <DifficultyPips pips={d.pips} />}
             {d.label}
-            <span className="text-[0.5rem] opacity-60">{total}</span>
+            <span className="numeric text-[0.5rem]">{total}</span>
           </button>
         );
       })}
@@ -232,7 +232,7 @@ export function DojoPage() {
             <div className="mb-1.5 flex items-center gap-1.5 px-1">
               <DifficultyPips pips={group.pips} className={style.text} />
               <p className={cn('eyebrow', style.text)}>{group.label}</p>
-              <span className="numeric ml-auto font-mono text-[0.5rem] text-muted-foreground/60">
+              <span className="numeric ml-auto font-mono text-[0.5rem] text-tertiary">
                 {cleared}/{group.items.length}
               </span>
             </div>
@@ -265,7 +265,7 @@ export function DojoPage() {
                         {done && <CheckCircle2 className="h-2.5 w-2.5" strokeWidth={3} />}
                       </span>
                       <span className="min-w-0 flex-1 truncate text-[0.75rem]">{c.title}</span>
-                      <span className="numeric shrink-0 font-mono text-[0.5625rem] text-muted-foreground/70">
+                      <span className="numeric shrink-0 font-mono text-[0.5625rem] text-muted-foreground">
                         {c.xp}
                       </span>
                     </button>
@@ -297,12 +297,12 @@ export function DojoPage() {
             className={cn(
               'flex flex-1 items-center justify-center gap-1 rounded-sm border px-1 py-1.5 font-mono text-[0.625rem] uppercase tracking-wider transition-colors',
               stack === s.id
-                ? 'border-primary/50 bg-primary/10 text-primary'
+                ? 'border-primary/50 bg-primary/10 text-primary-ink'
                 : 'border-border text-muted-foreground hover:text-foreground',
             )}
           >
             {s.short}
-            <span className="text-[0.5rem] opacity-60">
+            <span className="numeric text-[0.5rem]">
               {done}/{total}
             </span>
           </button>
@@ -349,7 +349,7 @@ export function DojoPage() {
           <Eye className="h-3 w-3" />
           {showSolution ? 'Hide' : 'Reveal'}
         </Button>
-        <span className="ml-auto font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground/60">
+        <span className="ml-auto font-mono text-[0.5625rem] uppercase tracking-widest text-tertiary">
           {challenge.mode === 'run'
             ? `sandboxed ${challenge.ts ? 'ts' : 'js'} · 1.6s limit`
             : 'static analysis'}
@@ -375,7 +375,7 @@ export function DojoPage() {
         >
           <div className="flex items-start gap-2">
             {outcome.ok ? (
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-lime" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-lime-ink" />
             ) : (
               <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
             )}
@@ -395,7 +395,7 @@ export function DojoPage() {
                 <button
                   type="button"
                   onClick={() => setShowSolution(true)}
-                  className="mt-1 font-mono text-[0.5625rem] uppercase tracking-widest text-amber hover:underline"
+                  className="mt-1 font-mono text-[0.5625rem] uppercase tracking-widest text-mango-ink hover:underline"
                 >
                   show reference solution
                 </button>
@@ -447,7 +447,7 @@ export function DojoPage() {
       {(challenge.expected || outcome?.expected !== undefined) && (
         <div>
           <p className="eyebrow mb-1.5">Reference output</p>
-          <pre className="max-h-40 overflow-auto rounded-md border border-lime/25 bg-lime/5 p-2 font-mono text-[0.625rem] leading-relaxed text-foreground/80">
+          <pre className="max-h-40 overflow-auto rounded-md border border-lime/25 bg-lime/5 p-2 font-mono text-[0.625rem] leading-relaxed text-foreground">
             {challenge.expected ??
               (typeof outcome?.expected === 'string'
                 ? outcome?.expected
@@ -458,7 +458,7 @@ export function DojoPage() {
 
       <div className="rounded-md border border-border bg-elevated/30 p-2.5">
         <p className="flex items-center gap-1.5 font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground">
-          <CircleDot className="h-3 w-3 text-violet" />
+          <CircleDot className="h-3 w-3 text-grape-ink" />
           why it works
         </p>
         <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted-foreground">{challenge.explain}</p>
@@ -477,7 +477,7 @@ export function DojoPage() {
         eyebrow="03 · Polyglot dojo"
         title={
           <>
-            Polyglot <span className="text-muted-foreground/50">Dojo</span>
+            Polyglot <span className="text-tertiary">Dojo</span>
           </>
         }
         description="The same payload transformation, written four ways. Go maps, JS array methods, TypeScript state shaping, Laravel collections — build the muscle memory before the API needs it."
@@ -496,7 +496,7 @@ export function DojoPage() {
               {stackSwitcher}
               <p className="eyebrow pt-0.5">Difficulty</p>
               {difficultyChips}
-              <p className="font-mono text-[0.5625rem] leading-relaxed text-muted-foreground/70">
+              <p className="font-mono text-[0.5625rem] leading-relaxed text-muted-foreground">
                 {STACK_META[stack].tagline}
               </p>
             </div>
@@ -542,7 +542,7 @@ export function DojoPage() {
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2 rounded-md border border-border bg-surface/60 px-3 py-2">
-        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-lime" />
+        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-lime-ink" />
         <p className="min-w-0 flex-1 text-[0.6875rem] leading-relaxed text-muted-foreground">
           JS and TypeScript run in a disposable worker with a 1.6s budget — TypeScript is transpiled on the fly, so
           types, interfaces and generics work as written. Go and PHP are verified by static analysis of the required

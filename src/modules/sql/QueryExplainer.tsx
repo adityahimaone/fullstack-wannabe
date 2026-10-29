@@ -117,8 +117,8 @@ export function QueryExplainer({ sql, result }: { sql: string; result: QueryResu
                 className={cn(
                   'rounded-sm border px-1.5 py-0.5 font-mono text-[0.5625rem] uppercase tracking-wider transition-colors',
                   clause.active
-                    ? 'border-primary/40 bg-primary/10 text-primary'
-                    : 'border-border/60 text-muted-foreground/35',
+                    ? 'border-primary/40 bg-primary/10 text-primary-ink'
+                    : 'border-border/60 text-tertiary',
                 )}
               >
                 {clause.label}
@@ -131,7 +131,7 @@ export function QueryExplainer({ sql, result }: { sql: string; result: QueryResu
       {info.joinType && (
         <div className="rounded-md border border-border bg-elevated/30 p-3">
           <div className="mb-2 flex items-center gap-1.5">
-            <GitMerge className="h-3 w-3 text-cyan" />
+            <GitMerge className="h-3 w-3 text-cyan-ink" />
             <p className="font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground">
               {info.joinType} JOIN
             </p>
@@ -148,7 +148,7 @@ export function QueryExplainer({ sql, result }: { sql: string; result: QueryResu
       {info.hasGroup && (
         <div className="rounded-md border border-border bg-elevated/30 p-3">
           <div className="mb-2 flex items-center gap-1.5">
-            <Layers className="h-3 w-3 text-amber" />
+            <Layers className="h-3 w-3 text-mango-ink" />
             <p className="font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground">
               GROUP BY collapses rows
             </p>
@@ -159,7 +159,7 @@ export function QueryExplainer({ sql, result }: { sql: string; result: QueryResu
                 <span key={i} className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40" />
               ))}
             </div>
-            <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground/50" />
+            <ArrowRight className="h-3 w-3 shrink-0 text-tertiary" />
             <div className="flex flex-wrap gap-1" aria-hidden>
               {Array.from({ length: Math.min(result?.rows.length ?? 3, 6) }, (_, i) => (
                 <span key={i} className="h-3 w-3 rounded-sm border border-amber/50 bg-amber/20" />
@@ -178,7 +178,7 @@ export function QueryExplainer({ sql, result }: { sql: string; result: QueryResu
         <ul className="space-y-1.5">
           {notes.map((note) => (
             <li key={note} className="flex gap-2 text-[0.6875rem] leading-relaxed text-muted-foreground">
-              <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-violet" />
+              <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-grape-ink" />
               {note}
             </li>
           ))}

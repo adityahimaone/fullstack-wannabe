@@ -6,6 +6,11 @@ const TooltipProvider = TooltipPrimitive.Provider;
 const Tooltip = TooltipPrimitive.Root;
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
+/**
+ * A tooltip is the ink sticker: ink fill, paper text. Both sides flip with the
+ * theme, so it stays legible in either — and it never sits over the ERD canvas
+ * or a code block as decoration, only on hover.
+ */
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
@@ -15,7 +20,7 @@ const TooltipContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-[70] max-w-[260px] overflow-hidden rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs leading-relaxed text-popover-foreground shadow-lg shadow-black/30',
+        'z-[70] max-w-[260px] overflow-hidden rounded-[10px] border-[2px] border-edge bg-foreground px-2.5 py-1.5 text-xs leading-relaxed text-background shadow-hard-sm',
         className,
       )}
       {...props}

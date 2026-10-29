@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wanni — mark sheet</title>
+<style>
+  :root{--ink:#1B1626;--paper:#FFF6E5;--card:#FFFDF7;--night:#171226;--lime:#C6F24E;--pink:#FF4D8D;--mango:#FFB020;--cyan:#2ED3F0;--grape:#6C4BF0;--mint:#2ED3A6}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--paper);color:var(--ink);font:14px/1.5 ui-sans-serif,system-ui,sans-serif;padding:32px;width:1100px}
+  h1{font-size:15px;letter-spacing:.14em;text-transform:uppercase;font-family:ui-monospace,monospace;font-weight:500;opacity:.5}
+  section{margin-top:24px}
+  .row{display:flex;align-items:flex-end;gap:28px;margin-top:14px}
+  .box{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .box span{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.1em;opacity:.45}
+  .dark{background:var(--night);padding:28px;border-radius:16px;margin-top:14px}
+  .dark .box span{color:#FFF6E5;opacity:.5}
+  .cast{display:flex;gap:22px;margin-top:14px}
+  .lock{background:var(--card);border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:20px;margin-top:14px}
+  .lock img{display:block;height:auto}
+</style>
+</head>
+<body>
+<h1>Mark · 16 / 32 / 64 / 128</h1>
+<section>
+  <div class="row">
+    <div class="box"><img src="mark.svg" width="128" height="128"><span>128</span></div>
+    <div class="box"><img src="mark.svg" width="64" height="64"><span>64</span></div>
+    <div class="box"><img src="mark.svg" width="32" height="32"><span>32</span></div>
+    <div class="box"><img src="favicon.svg" width="32" height="32"><span>fav 32</span></div>
+    <div class="box"><img src="favicon.svg" width="16" height="16"><span>fav 16</span></div>
+    <div class="box"><img src="mark-mono.svg" width="64" height="64"><span>mono 64</span></div>
+    <div class="box"><img src="mark-mono.svg" width="16" height="16"><span>mono 16</span></div>
+    <div class="box"><img src="glyph.svg" width="64" height="64"><span>glyph</span></div>
+  </div>
+</section>
+
+<section>
+  <h1>On the night field</h1>
+  <div class="dark">
+    <div class="row">
+      <div class="box"><img src="mark.svg" width="128" height="128"><span>mark</span></div>
+      <div class="box"><img src="mark-reverse.svg" width="128" height="128"><span>reverse</span></div>
+      <div class="box"><img src="mark-compact.svg" width="64" height="64"><span>compact</span></div>
+      <div class="box"><img src="mark-compact.svg" width="16" height="16"><span>16</span></div>
+      <div class="box"><img src="lockups/horizontal.svg" height="40"><span>horizontal</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h1>Cast · 6</h1>
+  <div class="cast">
+    <div class="box"><img src="cast/spark.svg" width="64" height="64"><span>spark</span></div>
+    <div class="box"><img src="cast/bolt.svg" width="64" height="64"><span>bolt</span></div>
+    <div class="box"><img src="cast/flag.svg" width="64" height="64"><span>flag</span></div>
+    <div class="box"><img src="cast/dice.svg" width="64" height="64"><span>dice</span></div>
+    <div class="box"><img src="cast/gem.svg" width="64" height="64"><span>gem</span></div>
+    <div class="box"><img src="cast/key.svg" width="64" height="64"><span>key</span></div>
+  </div>
+</section>
+
+<section>
+  <h1>Lockups</h1>
+  <div class="lock"><img src="lockups/horizontal.svg" height="56"></div>
+  <div class="lock"><img src="lockups/stacked.svg" height="110"></div>
+</section>
+</body>
+</html>

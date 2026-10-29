@@ -58,16 +58,16 @@ export function ApiTester({
     result == null
       ? ''
       : result.status < 300
-        ? 'border-lime/40 bg-lime/10 text-lime'
+        ? 'border-lime/40 bg-lime/10 text-lime-ink'
         : result.status < 500
-          ? 'border-amber/40 bg-amber/10 text-amber'
+          ? 'border-amber/40 bg-amber/10 text-mango-ink'
           : 'border-destructive/40 bg-destructive/10 text-destructive';
 
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex shrink-0 items-center justify-between border-b border-border px-3 py-2">
         <p className="eyebrow">Mini-postman</p>
-        <span className="font-mono text-[0.5625rem] uppercase tracking-widest text-muted-foreground/60">
+        <span className="font-mono text-[0.5625rem] uppercase tracking-widest text-tertiary">
           live against your seed
         </span>
       </div>
@@ -110,7 +110,7 @@ export function ApiTester({
                 setMethod(q.m);
                 setPath(q.p);
               }}
-              className="rounded-sm border border-border px-1.5 py-0.5 font-mono text-[0.5rem] uppercase tracking-wider text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+              className="rounded-sm border border-border px-1.5 py-0.5 font-mono text-[0.5rem] uppercase tracking-wider text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary-ink"
             >
               {q.m} {q.p.replace('/api/v1', '')}
             </button>
@@ -133,7 +133,7 @@ export function ApiTester({
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         {!result && !loading && (
           <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-            <Send className="h-5 w-5 text-muted-foreground/40" />
+            <Send className="h-5 w-5 text-tertiary" />
             <p className="max-w-[220px] text-[0.75rem] leading-relaxed text-muted-foreground">
               Send a request and watch it travel router → controller → service → repository → database.
             </p>
@@ -154,7 +154,7 @@ export function ApiTester({
                 {result.status} {result.statusText}
               </Badge>
               <span className="font-mono text-[0.5625rem] text-muted-foreground">{result.ms} ms</span>
-              <span className="ml-auto font-mono text-[0.5625rem] text-muted-foreground/60">
+              <span className="ml-auto font-mono text-[0.5625rem] text-tertiary">
                 {result.trace.length} hops
               </span>
             </div>
@@ -182,7 +182,7 @@ export function ApiTester({
       </div>
 
       <div className="flex shrink-0 items-center gap-2 border-t border-border px-3 py-1.5">
-        <p className="font-mono text-[0.5rem] uppercase tracking-widest text-muted-foreground/60">
+        <p className="font-mono text-[0.5rem] uppercase tracking-widest text-tertiary">
           steps light up as the request moves
         </p>
         <Button
