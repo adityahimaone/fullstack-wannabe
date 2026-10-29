@@ -1,0 +1,21 @@
+{
+  // Cloudflare Workers, static-assets only.
+  //
+  // There is no `main` and no bindings on purpose: this app is a client-side
+  // SPA with no server half. SQLite runs in the browser via sql.js, progress
+  // lives in localStorage, and there is no API. Cloudflare's only job is to
+  // serve `dist/` off the edge.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fullstack-wannabe",
+  "compatibility_date": "2026-10-29",
+
+  "assets": {
+    "directory": "./dist",
+
+    // Required, not optional. The app uses BrowserRouter, so /erd, /sql,
+    // /dojo, /blueprint and /design-system exist only as client-side routes —
+    // there is no sql/index.html on disk. Without this, a hard refresh or a
+    // shared deep link gets a 404 from the edge instead of the app shell.
+    "not_found_handling": "single-page-application"
+  }
+}

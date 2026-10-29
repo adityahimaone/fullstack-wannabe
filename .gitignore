@@ -10,6 +10,9 @@ dist-ssr/
 # every design tweak, so it stays out of history; regenerate before reviewing)
 brand/shots/
 
+# wrangler scratch (dry-run bundles, local dev state)
+.wrangler/
+
 # logs
 npm-debug.log*
 yarn-debug.log*

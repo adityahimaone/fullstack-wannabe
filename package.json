@@ -7,13 +7,15 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:dry": "npm run build && wrangler deploy --dry-run --outdir=.wrangler/dry",
     "typecheck": "tsc --noEmit",
     "check:dojo": "node scripts/check-dojo.mjs",
     "smoke": "node scripts/smoke.mjs",
+    "audit": "node scripts/audit-contrast.mjs",
     "shots": "node scripts/shot.mjs",
     "brand": "node brand/build-marks.mjs && node brand/tokens.mjs && node brand/build-react.mjs && node brand/build-page.mjs",
-    "postinstall": "node scripts/copy-wasm.mjs",
-    "audit": "node scripts/audit-contrast.mjs"
+    "postinstall": "node scripts/copy-wasm.mjs"
   },
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
@@ -54,6 +56,10 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.6.3",
-    "vite": "^6.0.7"
+    "vite": "^6.0.7",
+    "wrangler": "^4.155.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
